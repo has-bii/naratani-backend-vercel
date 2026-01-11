@@ -43,6 +43,7 @@ async function main() {
         create: {
           accountId: id,
           providerId: "credential",
+          password: hashedPassword,
         },
       },
     },

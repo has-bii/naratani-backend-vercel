@@ -47,4 +47,5 @@ export const auth = betterAuth({
       generateId: false,
     },
   },
+  trustedOrigins: ["https://admin.naratani.com"],
 })
