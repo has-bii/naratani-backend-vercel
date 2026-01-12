@@ -47,5 +47,5 @@ export const auth = betterAuth({
       generateId: false,
     },
   },
-  trustedOrigins: JSON.parse(process.env.TRUSTED_ORIGINS || "[]"),
+  trustedOrigins: process.env.TRUSTED_ORIGINS?.split(","),
 })
