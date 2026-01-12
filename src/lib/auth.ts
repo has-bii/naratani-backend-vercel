@@ -1,10 +1,11 @@
 import prisma from "@/lib/prisma"
 import { hashPassword, verifyPassword } from "@/utils/password"
 import { phoneSchema } from "@/validations/auth.validation"
-import { expo } from "@better-auth/expo"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { betterAuth } from "better-auth/minimal"
 import { admin, phoneNumber } from "better-auth/plugins"
+
+const trustedOrigins = process.env.TRUSTED_ORIGINS?.split(",")
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -19,7 +20,6 @@ export const auth = betterAuth({
     requireEmailVerification: false,
   },
   plugins: [
-    expo(),
     admin({
       defaultRole: "user",
       adminRoles: "admin",
@@ -49,5 +49,5 @@ export const auth = betterAuth({
       generateId: false,
     },
   },
-  trustedOrigins: ["https://admin.naratani.com", "exp://**"],
+  trustedOrigins,
 })
