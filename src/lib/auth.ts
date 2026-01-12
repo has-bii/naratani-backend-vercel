@@ -5,8 +5,6 @@ import { prismaAdapter } from "better-auth/adapters/prisma"
 import { betterAuth } from "better-auth/minimal"
 import { admin, phoneNumber } from "better-auth/plugins"
 
-const trustedOrigins = process.env.TRUSTED_ORIGINS?.split(",")
-
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
@@ -49,5 +47,5 @@ export const auth = betterAuth({
       generateId: false,
     },
   },
-  trustedOrigins,
+  trustedOrigins: JSON.parse(process.env.TRUSTED_ORIGINS || "[]"),
 })
