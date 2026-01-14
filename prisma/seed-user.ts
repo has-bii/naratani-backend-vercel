@@ -18,7 +18,10 @@ export async function seedUser(prisma: PrismaClient) {
     },
   })
 
-  if (isExist) throw new Error("Admin password already exists")
+  if (isExist) {
+    console.log("Admin password already exists")
+    return
+  }
 
   // Seed User
   const id = uuidv7()

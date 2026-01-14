@@ -17,7 +17,7 @@ export async function seedProducts(prisma: PrismaClient) {
     data: productJson.map(
       (product): Prisma.ProductCreateManyInput => ({
         name: product.name.toLowerCase(),
-        slug: product.name.toLowerCase().replaceAll(" ", " "),
+        slug: product.name.toLowerCase().replaceAll(" ", "-"),
         price: product.price ?? undefined,
         stock: product.stock,
         categoryId: categories.find(({ name }) => name === product.category)?.id,
