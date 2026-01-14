@@ -9,13 +9,13 @@ const pool = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter: pool })
 
 async function main() {
-  console.log("🌱 Starting database seeding...\n")
+  console.log("🌱 Starting production database seeding...\n")
 
   await seedUser(prisma)
   await seedShop(prisma)
   await seedProducts(prisma)
 
-  console.log("\n✅ Seeding completed!")
+  console.log("\n✅ Production seeding completed!")
 }
 
 main()
