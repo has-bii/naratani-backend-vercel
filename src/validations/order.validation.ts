@@ -13,7 +13,7 @@ export const createOrderSchema = z.object({
 export const updateOrderSchema = z
   .object({
     status: z.enum(["PENDING", "COMPLETED", "CANCELLED"], {
-      errorMap: () => ({ message: "Status tidak valid" }),
+      error: "Status tidak valid",
     }),
   })
   .partial()
