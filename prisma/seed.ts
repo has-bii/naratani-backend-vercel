@@ -1,7 +1,9 @@
 import { PrismaClient } from "@/generated/prisma/client"
-import { hashPassword } from "@/utils/password"
 import { PrismaPg } from "@prisma/adapter-pg"
-import { uuidv7 } from "uuidv7"
+
+import { seedProducts } from "./seed-product"
+import { seedShop } from "./seed-shop"
+import { seedUser } from "./seed-user"
 
 const pool = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter: pool })
@@ -9,49 +11,10 @@ const prisma = new PrismaClient({ adapter: pool })
 async function main() {
   console.log("🌱 Starting database seeding...\n")
 
-  const name = process.env.SEED_NAME
-  const email = process.env.SEED_EMAIL
-  const phone = process.env.SEED_PHONE
-  const password = process.env.SEED_PASSWORD
+  await seedUser(prisma)
+  await seedShop(prisma)
+  await seedProducts(prisma)
 
-  if (!name || !email || !phone || !password)
-    throw new Error("Name, email, phone, or password are not detected in env file")
-
-  // Check if admin exists
-  const isExist = await prisma.user.findFirst({
-    where: {
-      role: "admin",
-    },
-  })
-
-  if (isExist) throw new Error("Admin password already exists")
-
-  // Seed User
-  const id = uuidv7()
-  const hashedPassword = await hashPassword(password)
-
-  const user = await prisma.user.create({
-    data: {
-      id,
-      name,
-      email,
-      role: "admin",
-      emailVerified: true,
-      phoneNumber: phone,
-      phoneNumberVerified: true,
-      accounts: {
-        create: {
-          accountId: id,
-          providerId: "credential",
-          password: hashedPassword,
-        },
-      },
-    },
-  })
-
-  console.log("✅ Admin created:")
-  console.log(`   - Name: ${user.name}`)
-  console.log(`   - Email: ${user.email}`)
   console.log("\n✅ Seeding completed!")
 }
 

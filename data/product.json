@@ -1,0 +1,1602 @@
+[
+  {
+    "name": "Abacel 1 Liter",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 166000,
+    "stockIn": 370,
+    "stockOut": 370,
+    "stock": 0,
+    "location": "Gudang Garut"
+  },
+  {
+    "name": "Abacel 250ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 47000,
+    "stockIn": 100,
+    "stockOut": 100,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Abacel 500ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 86000,
+    "stockIn": 70,
+    "stockOut": 70,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Alika",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 5,
+    "stockOut": 5,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Ally Wg",
+    "category": "Herbisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 180,
+    "stockOut": 180,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Ambition 1 Liter",
+    "category": "Calsium",
+    "unit": "botol",
+    "price": 143000,
+    "stockIn": 101,
+    "stockOut": 101,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Ambition 500ml",
+    "category": "Calsium",
+    "unit": "botol",
+    "price": 79000,
+    "stockIn": 121,
+    "stockOut": 106,
+    "stock": 15,
+    "location": null
+  },
+  {
+    "name": "Amistartop 250ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 246000,
+    "stockIn": 60,
+    "stockOut": 60,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Anfush",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Antrachol 1Kg",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 34,
+    "stockOut": 34,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Antrachol 250gr",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": 39000,
+    "stockIn": 108,
+    "stockOut": 108,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Antrachol 500gr",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": 74000,
+    "stockIn": 60,
+    "stockOut": 60,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Ares 100ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 6,
+    "stockOut": 6,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Ares 300ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 4,
+    "stockOut": 4,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Atonik 500ml",
+    "category": "Fungisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 15,
+    "stockOut": 15,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Avidor 100gr",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": 22900,
+    "stockIn": 194,
+    "stockOut": 194,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Benlox",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 10,
+    "stockOut": 10,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Bentan",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 10,
+    "stockOut": 10,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Besromil 100 Gram",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": 28000,
+    "stockIn": 300,
+    "stockOut": 275,
+    "stock": 25,
+    "location": null
+  },
+  {
+    "name": "Besvidor 100Gram",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": 18500,
+    "stockIn": 400,
+    "stockOut": 400,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Bom Up",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": 49000,
+    "stockIn": 60,
+    "stockOut": 45,
+    "stock": 15,
+    "location": null
+  },
+  {
+    "name": "BroadPluss77 Wp",
+    "category": "Herbisida",
+    "unit": "pis",
+    "price": 9700,
+    "stockIn": 7175,
+    "stockOut": 7175,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Buncis Pertiwi 500gr",
+    "category": "Benih",
+    "unit": "pis",
+    "price": 74000,
+    "stockIn": 294,
+    "stockOut": 294,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Cabriotop 250gr",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": 74000,
+    "stockIn": 45,
+    "stockOut": 45,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Calicron 100 ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 80,
+    "stockOut": 80,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Calicron 250 ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 40,
+    "stockOut": 40,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Calicron 500 ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 129000,
+    "stockIn": 29,
+    "stockOut": 29,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Culacron 100ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 29000,
+    "stockIn": 122,
+    "stockOut": 119,
+    "stock": 3,
+    "location": null
+  },
+  {
+    "name": "Culacron 250ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 66000,
+    "stockIn": 68,
+    "stockOut": 68,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Daconil",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": 25000,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Dangke 100gr",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": 21000,
+    "stockIn": 175,
+    "stockOut": 165,
+    "stock": 10,
+    "location": null
+  },
+  {
+    "name": "Dangke 250gr",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": 51000,
+    "stockIn": 65,
+    "stockOut": 65,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Decis 100 ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 140,
+    "stockOut": 140,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Decis 250 ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 80,
+    "stockOut": 80,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Decis 500 ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 40,
+    "stockOut": 40,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Decis 50ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 16000,
+    "stockIn": 90,
+    "stockOut": 68,
+    "stock": 22,
+    "location": null
+  },
+  {
+    "name": "Demolish 100ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 63000,
+    "stockIn": 38,
+    "stockOut": 31,
+    "stock": 7,
+    "location": null
+  },
+  {
+    "name": "Demolish 200ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 117000,
+    "stockIn": 23,
+    "stockOut": 23,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "DG Compact",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 48,
+    "stockOut": 48,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "DGW 16-16 1Kg",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 120,
+    "stockOut": 120,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "DGW Booster 1Kg",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 72,
+    "stockOut": 72,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Diazonin Serbuk",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 4,
+    "stockOut": 4,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Dithan 1kg",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": 135000,
+    "stockIn": 200,
+    "stockOut": 200,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Dithane 200gr",
+    "category": "Fungisida",
+    "unit": "botol",
+    "price": 31500,
+    "stockIn": 100,
+    "stockOut": 55,
+    "stock": 45,
+    "location": null
+  },
+  {
+    "name": "Elang 1 Liter",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": 57500,
+    "stockIn": 1050,
+    "stockOut": 1005,
+    "stock": 45,
+    "location": null
+  },
+  {
+    "name": "Emacel 250ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 68000,
+    "stockIn": 40,
+    "stockOut": 40,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Emacel 500ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 129500,
+    "stockIn": 21,
+    "stockOut": 21,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Ethrel",
+    "category": "Calsium",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 4,
+    "stockOut": 4,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "FIlia 250ml",
+    "category": "Fungisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 5,
+    "stockOut": 5,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Furadan 1kg",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 146,
+    "stockOut": 146,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Furadan 2kg",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": 34000,
+    "stockIn": 236,
+    "stockOut": 236,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Gabdasil D",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 30,
+    "stockOut": 30,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Gandasil B",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 30,
+    "stockOut": 30,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Gibro SP",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": 3750,
+    "stockIn": 930,
+    "stockOut": 539,
+    "stock": 391,
+    "location": null
+  },
+  {
+    "name": "Gibro TB",
+    "category": "Calsium",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 260,
+    "stockOut": 260,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Gramoxone 1liter",
+    "category": "Herbisida",
+    "unit": "pis",
+    "price": 58500,
+    "stockIn": 408,
+    "stockOut": 408,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Gramoxone 250ml",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 120,
+    "stockOut": 120,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Gramoxone 500Ml",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": 32500,
+    "stockIn": 28,
+    "stockOut": 28,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Grower 1kg",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": 17500,
+    "stockIn": 240,
+    "stockOut": 240,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Jaring 100 M",
+    "category": "Peralatan",
+    "unit": "roll",
+    "price": null,
+    "stockIn": 21,
+    "stockOut": 21,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Joker 100gr Fungisida",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 100,
+    "stockOut": 100,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Joker 400gr Fungisida",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 21,
+    "stockOut": 21,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Karate Baron",
+    "category": "Calsium",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 24,
+    "stockOut": 24,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Kardan 100Gram",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 80,
+    "stockOut": 80,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "KCL DGW",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 24,
+    "stockOut": 24,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Ketave",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 3,
+    "stockOut": 3,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "KNO Putih",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 25,
+    "stockOut": 25,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Kresban 1L",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 10,
+    "stockOut": 10,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Kresban 400ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 8,
+    "stockOut": 8,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Lantis 1Liter",
+    "category": "Peralatan",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 15,
+    "stockOut": 15,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Lindomin 200ml Herbisida",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": 21000,
+    "stockIn": 520,
+    "stockOut": 520,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Lindomin 400ml Herbisida",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "M4 Peternakan",
+    "category": "Lainnya",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 5,
+    "stockOut": 5,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Magnesium Sulfat",
+    "category": "Calsium",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Malika",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 120,
+    "stockOut": 120,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Manohara",
+    "category": "Calsium",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Marshal 500ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 42,
+    "stockOut": 42,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Metindo 500gr",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 40,
+    "stockOut": 40,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Meurtieur 250 ml",
+    "category": "Fungisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 30,
+    "stockOut": 30,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Mipcinta 100gr",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 100,
+    "stockOut": 100,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Mipcinta 500gr",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "MKP 1Kg",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": 48000,
+    "stockIn": 430,
+    "stockOut": 426,
+    "stock": 4,
+    "location": null
+  },
+  {
+    "name": "Mutiara 16-16 1Kg",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": 17000,
+    "stockIn": 312,
+    "stockOut": 312,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Nativo",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 10,
+    "stockOut": 10,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Natural",
+    "category": "Fungisida",
+    "unit": null,
+    "price": null,
+    "stockIn": 6,
+    "stockOut": 6,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Nitrea 5 kg",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 76,
+    "stockOut": 76,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Nordox",
+    "category": "Fungisida",
+    "unit": null,
+    "price": null,
+    "stockIn": 10,
+    "stockOut": 10,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "NPK 16-16",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 144,
+    "stockOut": 144,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "NPK Grower",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": 17500,
+    "stockIn": 48,
+    "stockOut": 48,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "NPK Mutiara",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 96,
+    "stockOut": 96,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Pegasus",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 9,
+    "stockOut": 9,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Power Soil 1 Kg",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": 60000,
+    "stockIn": 336,
+    "stockOut": 336,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Prevathon 100ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 80,
+    "stockOut": 80,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Prevathon 250ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 48,
+    "stockOut": 48,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Primakuat",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 60,
+    "stockOut": 60,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Primaxone Plus",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": 36500,
+    "stockIn": 3298,
+    "stockOut": 3258,
+    "stock": 40,
+    "location": null
+  },
+  {
+    "name": "Primaxone plus 5L",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Rambo 1L",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Rambo Gold",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Regent Red 100ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 42500,
+    "stockIn": 103,
+    "stockOut": 103,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Regent Red 250ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 25,
+    "stockOut": 25,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Regent Red 50ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 80,
+    "stockOut": 80,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Ridomil Gold 100gr",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 10,
+    "stockOut": 10,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Ridomil Gold 200gr",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 10,
+    "stockOut": 10,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Rizotin 100Ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 85,
+    "stockOut": 85,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Rizotin 500Ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 8,
+    "stockOut": 8,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Roundup 1L",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": 76000,
+    "stockIn": 544,
+    "stockOut": 556,
+    "stock": -12,
+    "location": null
+  },
+  {
+    "name": "Roundup 200ml",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": 20000,
+    "stockIn": 113,
+    "stockOut": 101,
+    "stock": 12,
+    "location": null
+  },
+  {
+    "name": "Sagribat 40gr",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": 32250,
+    "stockIn": 442,
+    "stockOut": 442,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sapu Bersih 1 L",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": 60000,
+    "stockIn": 140,
+    "stockOut": 120,
+    "stock": 20,
+    "location": null
+  },
+  {
+    "name": "Score 250ml",
+    "category": "Fungisida",
+    "unit": "botol",
+    "price": 157500,
+    "stockIn": 438,
+    "stockOut": 292,
+    "stock": 146,
+    "location": null
+  },
+  {
+    "name": "Score 80ml",
+    "category": "Fungisida",
+    "unit": "botol",
+    "price": 53500,
+    "stockIn": 528,
+    "stockOut": 388,
+    "stock": 140,
+    "location": null
+  },
+  {
+    "name": "Serendy",
+    "category": "Herbisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 440,
+    "stockOut": 440,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sidabas",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 6,
+    "stockOut": 6,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sidalaku 1L",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 57,
+    "stockOut": 57,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sidalaku 400ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 50,
+    "stockOut": 50,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sidamethrin 1L",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 76,
+    "stockOut": 76,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sidamethrin 400ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 29500,
+    "stockIn": 248,
+    "stockOut": 248,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sidatan",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 8,
+    "stockOut": 8,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Siklon",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": 33000,
+    "stockIn": 200,
+    "stockOut": 110,
+    "stock": 90,
+    "location": null
+  },
+  {
+    "name": "Sinergy 80ml",
+    "category": "Fungisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 50,
+    "stockOut": 50,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "SP 26 Petro",
+    "category": "Pupuk",
+    "unit": "sak",
+    "price": 153000,
+    "stockIn": 738,
+    "stockOut": 738,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "SP GRO D 250ml",
+    "category": "Pupuk",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 18,
+    "stockOut": 18,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "SP GRO D 750ml",
+    "category": "Pupuk",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 4,
+    "stockOut": 4,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Spontan 1L",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 39,
+    "stockOut": 39,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Spontan 200 Ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 5,
+    "stockOut": 5,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Spontan 500ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 49000,
+    "stockIn": 52,
+    "stockOut": 52,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Starban 400Ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 56,
+    "stockOut": 56,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sumo 500ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 92000,
+    "stockIn": 45,
+    "stockOut": 45,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Supremo 1L",
+    "category": "Fungisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 180,
+    "stockOut": 180,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Tandem 250ml",
+    "category": "Fungisida",
+    "unit": "botol",
+    "price": 108000,
+    "stockIn": 100,
+    "stockOut": 100,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Ti Gold 25 Gram",
+    "category": "Herbisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 1820,
+    "stockOut": 1820,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Toxiput",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 40,
+    "stockOut": 40,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Ultradap",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": 40000,
+    "stockIn": 435,
+    "stockOut": 394,
+    "stock": 41,
+    "location": null
+  },
+  {
+    "name": "Virtako 10ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 40,
+    "stockOut": 40,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Virtako 50ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 10,
+    "stockOut": 10,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Pilar Kuat 1L",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": 25000,
+    "stockIn": 60,
+    "stockOut": 60,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Curracron 500ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 129000,
+    "stockIn": 30,
+    "stockOut": 30,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "actozeb",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": 65000,
+    "stockIn": 20,
+    "stockOut": 10,
+    "stock": 10,
+    "location": null
+  },
+  {
+    "name": "Victory Kuning",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": 69000,
+    "stockIn": 80,
+    "stockOut": 80,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Victory Biru",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": 74000,
+    "stockIn": 0,
+    "stockOut": 0,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Siodan",
+    "category": "Fungisida",
+    "unit": "botol",
+    "price": 52000,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sumo 80Ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": null,
+    "stockIn": 29,
+    "stockOut": 29,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sagriclear 100gr",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": 73000,
+    "stockIn": 10,
+    "stockOut": 10,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sidafos",
+    "category": null,
+    "unit": "botol",
+    "price": null,
+    "stockIn": 0,
+    "stockOut": 0,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Toxedown 100ml",
+    "category": null,
+    "unit": "botol",
+    "price": null,
+    "stockIn": 0,
+    "stockOut": 0,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Abacel 100Ml",
+    "category": "Insektisida",
+    "unit": "botol",
+    "price": 32000,
+    "stockIn": 20,
+    "stockOut": 10,
+    "stock": 10,
+    "location": null
+  },
+  {
+    "name": "Powersorb",
+    "category": "Herbisida",
+    "unit": "botol",
+    "price": 65000,
+    "stockIn": 40,
+    "stockOut": 40,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Marshal 25Gr",
+    "category": null,
+    "unit": "pis",
+    "price": 7800,
+    "stockIn": 180,
+    "stockOut": 180,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Master Soil",
+    "category": "Calsium",
+    "unit": "pis",
+    "price": 59000,
+    "stockIn": 32,
+    "stockOut": 0,
+    "stock": 32,
+    "location": null
+  },
+  {
+    "name": "Guarda",
+    "category": "Benih",
+    "unit": "pis",
+    "price": null,
+    "stockIn": 0,
+    "stockOut": 0,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Gracia",
+    "category": "Insektisida",
+    "unit": "pis",
+    "price": 192000,
+    "stockIn": 10,
+    "stockOut": 10,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Lannate sp 100grm",
+    "category": null,
+    "unit": "pis",
+    "price": 36500,
+    "stockIn": 10,
+    "stockOut": 10,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sumo 250ml",
+    "category": null,
+    "unit": "pis",
+    "price": 53000,
+    "stockIn": 5,
+    "stockOut": 5,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Sildok",
+    "category": null,
+    "unit": "pis",
+    "price": 45000,
+    "stockIn": 5,
+    "stockOut": 5,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "atonik 100ml",
+    "category": null,
+    "unit": "pis",
+    "price": 14500,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Manco 1Kg",
+    "category": null,
+    "unit": "pis",
+    "price": 103000,
+    "stockIn": 30,
+    "stockOut": 20,
+    "stock": 10,
+    "location": null
+  },
+  {
+    "name": "Tawon 16-16 1kg",
+    "category": "Pupuk",
+    "unit": "pis",
+    "price": 16000,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Cabriotop 500grm",
+    "category": "Fungisida",
+    "unit": "pis",
+    "price": 134000,
+    "stockIn": 5,
+    "stockOut": 5,
+    "stock": 0,
+    "location": null
+  },
+  {
+    "name": "Or Twis 42",
+    "category": null,
+    "unit": "pis",
+    "price": 295000,
+    "stockIn": 20,
+    "stockOut": 20,
+    "stock": 0,
+    "location": null
+  }
+]
