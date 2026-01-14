@@ -5,7 +5,7 @@ import { phoneSchema } from "@/validations/auth.validation"
 import { expo } from "@better-auth/expo"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { betterAuth } from "better-auth/minimal"
-import { admin, phoneNumber } from "better-auth/plugins"
+import { admin, openAPI, phoneNumber } from "better-auth/plugins"
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -20,6 +20,7 @@ export const auth = betterAuth({
     requireEmailVerification: false,
   },
   plugins: [
+    openAPI(),
     expo(),
     admin({
       ac,
