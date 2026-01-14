@@ -84,3 +84,23 @@ export async function withErrorHandler<T>(handler: () => Promise<T>): Promise<T 
     return new InternalServerException().toResponse()
   }
 }
+
+export interface PaginationMeta {
+  page: number
+  limit: number
+  total: number
+  totalPages: number
+  hasNext: boolean
+  hasPrev: boolean
+}
+
+export function getPaginationInfo(page: number, limit: number, total: number): PaginationMeta {
+  return {
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    hasNext: (page + 1) * limit < total,
+    hasPrev: page > 0,
+  }
+}

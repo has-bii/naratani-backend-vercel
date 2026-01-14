@@ -56,15 +56,41 @@ Client → Next.js API Routes (src/app/) → Better Auth Middleware → Prisma O
 ```
 src/
 ├── app/
-│   ├── api/auth/[...all]/route.ts    # Better Auth catch-all handler
-│   └── products/route.ts              # Product API endpoints
+│   ├── api/
+│   │   └── auth/[...all]/route.ts    # Better Auth catch-all handler
+│   ├── products/
+│   │   ├── route.ts                   # Product CRUD (GET, POST)
+│   │   └── [id]/route.ts              # Product by ID (GET, PATCH, DELETE)
+│   ├── categories/
+│   │   ├── route.ts                   # Category CRUD (GET, POST)
+│   │   └── [id]/route.ts              # Category by ID (GET, PATCH, DELETE)
+│   └── generated/prisma/              # Auto-generated Prisma client
+│
 ├── lib/
 │   ├── auth.ts                        # Better Auth configuration
-│   └── prisma.ts                      # Prisma client with pg adapter
+│   ├── prisma.ts                      # Prisma client with pg adapter
+│   ├── api-utils.ts                   # API response helpers, error handlers, pagination
+│   ├── exceptions.ts                  # Custom exception classes
+│   └── permissions.ts                 # Role-based access control constants
+│
 ├── utils/
-│   └── password.ts                    # Argon2 hashing utilities
-├── validations/                       # Zod schemas
-└── generated/prisma/                  # Auto-generated Prisma client
+│   ├── password.ts                    # Argon2 hashing utilities
+│   └── slugify.ts                     # URL slug generation
+│
+└── validations/
+    ├── auth.validation.ts             # Auth-related Zod schemas
+    ├── product.validation.ts          # Product-related Zod schemas
+    └── category.validation.ts         # Category-related Zod schemas
+
+prisma/
+├── schema.prisma                      # Database schema definition
+├── migrations/                        # Database migration files
+└── seed-*.ts                          # Database seeders (user, shop, product)
+
+Root Config Files:
+- next.config.ts      # Next.js configuration (external packages)
+- tsconfig.json       # TypeScript configuration
+- prisma.config.ts    # Prisma configuration
 ```
 
 ### Key Architecture Decisions
@@ -97,6 +123,50 @@ Core models (defined in `prisma/schema.prisma`):
 - **Product**: Products with slug, price, stock, category relation
 
 All tables use `uuid(7)` for IDs and are mapped to lowercase snake_case names.
+
+## API Response Conventions
+
+### Single Resource Response
+```json
+{
+  "error": null,
+  "message": "ok",
+  "data": { ... }
+}
+```
+
+### Paginated List Response
+```json
+{
+  "error": null,
+  "message": "ok",
+  "data": {
+    "data": [...],
+    "pagination": {
+      "page": 0,
+      "limit": 10,
+      "total": 100,
+      "totalPages": 10,
+      "hasNext": true,
+      "hasPrev": false
+    }
+  }
+}
+```
+
+Use `getPaginationInfo(page, limit, total)` from `@/lib/api-utils` for consistent pagination metadata.
+
+## Role-Based Permissions
+
+Defined in `src/lib/permissions.ts`:
+
+| Role | Product | Category |
+|------|---------|----------|
+| Admin | create, read, update, delete | create, read, update, delete |
+| User | read | read |
+| Sales | read | read |
+
+Use `requirePermission({ resource: ["action"] })` in route handlers to enforce permissions.
 
 ## Adding New Features
 

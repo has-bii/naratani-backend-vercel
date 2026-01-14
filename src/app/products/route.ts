@@ -1,4 +1,4 @@
-import { createdResponse, requirePermission, withErrorHandler } from "@/lib/api-utils"
+import { createdResponse, getPaginationInfo, requirePermission, withErrorHandler } from "@/lib/api-utils"
 import { ConflictException } from "@/lib/exceptions"
 import prisma from "@/lib/prisma"
 import { slugify } from "@/utils/slugify"
@@ -47,17 +47,12 @@ export async function GET(request: Request) {
     ])
 
     return NextResponse.json({
-      data: products,
-      meta: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-        hasNext: (page + 1) * limit < total,
-        hasPrev: page > 0,
-      },
-      message: "ok",
       error: null,
+      message: "ok",
+      data: {
+        data: products,
+        pagination: getPaginationInfo(page, limit, total),
+      },
     })
   })
 }
