@@ -1,0 +1,22 @@
+import { createAccessControl } from "better-auth/plugins/access"
+import { adminAc, defaultStatements } from "better-auth/plugins/admin/access"
+
+export const statement = {
+  ...defaultStatements,
+  product: ["create", "read", "update", "delete"] as const,
+} as const
+
+export const ac = createAccessControl(statement)
+
+export const admin = ac.newRole({
+  ...adminAc.statements,
+  product: ["create", "read", "update", "delete"],
+})
+
+export const user = ac.newRole({
+  product: ["read"],
+})
+
+export const sales = ac.newRole({
+  product: ["read"],
+})

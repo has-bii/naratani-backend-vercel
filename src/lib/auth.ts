@@ -1,3 +1,4 @@
+import { ac, admin as adminRole, sales, user } from "@/lib/permissions"
 import prisma from "@/lib/prisma"
 import { hashPassword, verifyPassword } from "@/utils/password"
 import { phoneSchema } from "@/validations/auth.validation"
@@ -21,8 +22,13 @@ export const auth = betterAuth({
   plugins: [
     expo(),
     admin({
+      ac,
       defaultRole: "user",
-      adminRoles: "admin",
+      roles: {
+        admin: adminRole,
+        user,
+        sales,
+      },
     }),
     phoneNumber({
       sendOTP: ({ phoneNumber, code }) => {
