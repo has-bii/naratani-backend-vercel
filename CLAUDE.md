@@ -64,6 +64,9 @@ src/
 │   ├── categories/
 │   │   ├── route.ts                   # Category CRUD (GET, POST)
 │   │   └── [id]/route.ts              # Category by ID (GET, PATCH, DELETE)
+│   ├── shops/
+│   │   ├── route.ts                   # Shop CRUD (GET, POST)
+│   │   └── [id]/route.ts              # Shop by ID (GET, PATCH, DELETE)
 │   └── generated/prisma/              # Auto-generated Prisma client
 │
 ├── lib/
@@ -80,7 +83,8 @@ src/
 └── validations/
     ├── auth.validation.ts             # Auth-related Zod schemas
     ├── product.validation.ts          # Product-related Zod schemas
-    └── category.validation.ts         # Category-related Zod schemas
+    ├── category.validation.ts         # Category-related Zod schemas
+    └── shop.validation.ts             # Shop-related Zod schemas
 
 prisma/
 ├── schema.prisma                      # Database schema definition
@@ -160,11 +164,11 @@ Use `getPaginationInfo(page, limit, total)` from `@/lib/api-utils` for consisten
 
 Defined in `src/lib/permissions.ts`:
 
-| Role | Product | Category |
-|------|---------|----------|
-| Admin | create, read, update, delete | create, read, update, delete |
-| User | read | read |
-| Sales | read | read |
+| Role | Product | Category | Shop |
+|------|---------|----------|-------|
+| Admin | create, read, update, delete | create, read, update, delete | create, read, update, delete |
+| User | read | read | read |
+| Sales | read | read | read |
 
 Use `requirePermission({ resource: ["action"] })` in route handlers to enforce permissions.
 
@@ -174,6 +178,8 @@ Use `requirePermission({ resource: ["action"] })` in route handlers to enforce p
 2. **Database Models**: Modify `prisma/schema.prisma`, run `prisma migrate dev`
 3. **Validation**: Add Zod schemas to `src/validations/`
 4. **Auth Changes**: Modify `src/lib/auth.ts`
+5. **Permissions**: Update `src/lib/permissions.ts` and the permissions table in this file
+6. **Documentation**: **Always update this CLAUDE.md file when adding new features**
 
 ## Conventional Commit Style
 
