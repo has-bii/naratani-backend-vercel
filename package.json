@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "prisma-migrate:test": "dotenv -e .env.test.local -- npx prisma migrate deploy"
   },
   "dependencies": {
     "@better-auth/expo": "^1.4.12",
@@ -25,6 +26,7 @@
     "@types/node": "^20.19.29",
     "@types/pg": "^8.16.0",
     "@types/react": "^19.2.8",
+    "dotenv-cli": "^11.0.0",
     "prettier": "^3.7.4",
     "prisma": "^7.2.0",
     "tsx": "^4.21.0",
