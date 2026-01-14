@@ -27,43 +27,43 @@ export class HttpException extends Error {
 }
 
 export class InternalServerException extends HttpException {
-  constructor(message: string = "Internal server error", code: string = "INTERNAL_SERVER_ERROR") {
+  constructor(message: string = "Terjadi kesalahan pada server", code: string = "INTERNAL_SERVER_ERROR") {
     super(message, code, 500)
   }
 }
 
 export class UnauthorizedException extends HttpException {
-  constructor(message: string = "You are not authenticated", code: string = "UNAUTHORIZED") {
+  constructor(message: string = "Anda belum diautentikasi", code: string = "UNAUTHORIZED") {
     super(message, code, 401)
   }
 }
 
 export class ForbiddenException extends HttpException {
-  constructor(message: string = "You don't have permission to access", code: string = "FORBIDDEN") {
+  constructor(message: string = "Anda tidak memiliki izin untuk mengakses", code: string = "FORBIDDEN") {
     super(message, code, 403)
   }
 }
 
 export class NotFoundException extends HttpException {
-  constructor(message: string = "Resource not found", code: string = "NOT_FOUND") {
+  constructor(message: string = "Sumber daya tidak ditemukan", code: string = "NOT_FOUND") {
     super(message, code, 404)
   }
 }
 
 export class BadRequestException extends HttpException {
-  constructor(message: string = "Bad request", code: string = "BAD_REQUEST") {
+  constructor(message: string = "Permintaan tidak valid", code: string = "BAD_REQUEST") {
     super(message, code, 400)
   }
 }
 
 export class ConflictException extends HttpException {
-  constructor(message: string = "Resource already exists", code: string = "CONFLICT") {
+  constructor(message: string = "Sumber daya sudah ada", code: string = "CONFLICT") {
     super(message, code, 409)
   }
 }
 
 export class ValidationException extends HttpException {
-  constructor(public errors: unknown, message: string = "Validation error", code: string = "VALIDATION_ERROR") {
+  constructor(public errors: unknown, message: string = "Validasi gagal", code: string = "VALIDATION_ERROR") {
     super(message, code, 400)
   }
 

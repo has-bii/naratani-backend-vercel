@@ -80,10 +80,10 @@ export async function POST(request: Request) {
       },
     })
 
-    return createdResponse(product, "Product created successfully")
+    return createdResponse(product, "Produk berhasil dibuat")
   } catch (error) {
     if (error instanceof Error && "code" in error && error.code === "P2002") {
-      return new ConflictException("Product with this slug already exists").toResponse()
+      return new ConflictException("Produk dengan slug ini sudah ada").toResponse()
     }
     return handleApiError(error, "POST /products")
   }

@@ -17,7 +17,7 @@ async function findProduct(id: string) {
   })
 
   if (!product) {
-    throw new NotFoundException("Product not found")
+    throw new NotFoundException("Produk tidak ditemukan")
   }
 
   return product
@@ -59,10 +59,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       },
     })
 
-    return successResponse(product, "Product updated successfully")
+    return successResponse(product, "Produk berhasil diperbarui")
   } catch (error) {
     if (error instanceof Error && "code" in error && error.code === "P2002") {
-      return new ConflictException("Product with this slug already exists").toResponse()
+      return new ConflictException("Produk dengan slug ini sudah ada").toResponse()
     }
     return handleApiError(error, "PUT /products/[id]")
   }
@@ -83,7 +83,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
       where: { id: existingProduct.id },
     })
 
-    return successResponse(null, "Product deleted successfully")
+    return successResponse(null, "Produk berhasil dihapus")
   } catch (error) {
     return handleApiError(error, "DELETE /products/[id]")
   }

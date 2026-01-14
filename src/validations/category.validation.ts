@@ -1,12 +1,12 @@
 import z from "zod"
 
 export const createCategorySchema = z.object({
-  name: z.string().min(1, "Name is required").max(255, "Name too long"),
+  name: z.string().min(1, "Nama wajib diisi").max(255, "Nama terlalu panjang"),
 })
 
 export const updateCategorySchema = z
   .object({
-    name: z.string().min(1, "Name is required").max(255, "Name too long").optional(),
+    name: z.string().min(1, "Nama wajib diisi").max(255, "Nama terlalu panjang").optional(),
   })
   .partial()
 

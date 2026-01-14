@@ -9,7 +9,7 @@ async function findShop(id: string) {
   })
 
   if (!shop) {
-    throw new NotFoundException("Shop not found")
+    throw new NotFoundException("Toko tidak ditemukan")
   }
 
   return shop
@@ -43,10 +43,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       data: validatedData,
     })
 
-    return successResponse(shop, "Shop updated successfully")
+    return successResponse(shop, "Toko berhasil diperbarui")
   } catch (error) {
     if (error instanceof Error && "code" in error && error.code === "P2002") {
-      return new ConflictException("Shop with this name already exists").toResponse()
+      return new ConflictException("Toko dengan nama ini sudah ada").toResponse()
     }
     return handleApiError(error, "PUT /shops/[id]")
   }
@@ -67,7 +67,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
       where: { id },
     })
 
-    return successResponse(null, "Shop deleted successfully")
+    return successResponse(null, "Toko berhasil dihapus")
   } catch (error) {
     return handleApiError(error, "DELETE /shops/[id]")
   }

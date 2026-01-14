@@ -1,18 +1,18 @@
 import z from "zod"
 
 export const createProductSchema = z.object({
-  name: z.string().min(1, "Name is required").max(255, "Name too long"),
-  price: z.number().int().min(0, "Price must be non-negative").default(0),
-  stock: z.number().int().min(0, "Stock must be non-negative").default(0),
-  categoryId: z.uuid("Invalid category ID").optional(),
+  name: z.string().min(1, "Nama wajib diisi").max(255, "Nama terlalu panjang"),
+  price: z.number().int().min(0, "Harga tidak boleh negatif").default(0),
+  stock: z.number().int().min(0, "Stok tidak boleh negatif").default(0),
+  categoryId: z.uuid("ID kategori tidak valid").optional(),
 })
 
 export const updateProductSchema = z
   .object({
-    name: z.string().min(1, "Name is required").max(255, "Name too long").optional(),
-    price: z.number().int().min(0, "Price must be non-negative").optional(),
-    stock: z.number().int().min(0, "Stock must be non-negative").optional(),
-    categoryId: z.uuid("Invalid category ID").optional().nullable(),
+    name: z.string().min(1, "Nama wajib diisi").max(255, "Nama terlalu panjang").optional(),
+    price: z.number().int().min(0, "Harga tidak boleh negatif").optional(),
+    stock: z.number().int().min(0, "Stok tidak boleh negatif").optional(),
+    categoryId: z.uuid("ID kategori tidak valid").optional().nullable(),
   })
   .partial()
 
@@ -30,7 +30,7 @@ export const getProductQuerySchema = z.object({
     .optional()
     .default("createdAt"),
   sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
-  category: z.uuid("Invalid category ID").optional(),
+  category: z.uuid("ID kategori tidak valid").optional(),
   search: z.string().optional(),
   minPrice: z
     .string()

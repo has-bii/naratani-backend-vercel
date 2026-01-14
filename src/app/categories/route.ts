@@ -49,10 +49,10 @@ export async function POST(request: Request) {
       data: validatedData,
     })
 
-    return createdResponse(category, "Category created successfully")
+    return createdResponse(category, "Kategori berhasil dibuat")
   } catch (error) {
     if (error instanceof Error && "code" in error && error.code === "P2002") {
-      return new ConflictException("Category with this name already exists").toResponse()
+      return new ConflictException("Kategori dengan nama ini sudah ada").toResponse()
     }
 
     return handleApiError(error, "POST /categories")

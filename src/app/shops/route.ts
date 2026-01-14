@@ -47,10 +47,10 @@ export async function POST(request: Request) {
       data: validatedData,
     })
 
-    return createdResponse(shop, "Shop created successfully")
+    return createdResponse(shop, "Toko berhasil dibuat")
   } catch (error) {
     if (error instanceof Error && "code" in error && error.code === "P2002") {
-      return new ConflictException("Shop with this name already exists").toResponse()
+      return new ConflictException("Toko dengan nama ini sudah ada").toResponse()
     }
     return handleApiError(error, "POST /shops")
   }

@@ -9,7 +9,7 @@ async function findCategory(id: string) {
   })
 
   if (!category) {
-    throw new NotFoundException("Category not found")
+    throw new NotFoundException("Kategori tidak ditemukan")
   }
 
   return category
@@ -43,10 +43,10 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       data: validatedData,
     })
 
-    return successResponse(category, "Category updated successfully")
+    return successResponse(category, "Kategori berhasil diperbarui")
   } catch (error) {
     if (error instanceof Error && "code" in error && error.code === "P2002") {
-      return new ConflictException("Category with this name already exists").toResponse()
+      return new ConflictException("Kategori dengan nama ini sudah ada").toResponse()
     }
     return handleApiError(error, "PUT /categories/[id]")
   }
@@ -63,7 +63,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
       where: { id },
     })
 
-    return successResponse(null, "Category deleted successfully")
+    return successResponse(null, "Kategori berhasil dihapus")
   } catch (error) {
     return handleApiError(error, "DELETE /categories/[id]")
   }
