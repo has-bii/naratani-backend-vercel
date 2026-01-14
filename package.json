@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "postinstall": "prisma generate",
+    "prisma-migrate:prod": "dotenv -e .env.production.local -- npx prisma migrate deploy",
     "prisma-migrate:test": "dotenv -e .env.test.local -- npx prisma migrate deploy",
     "seed": "npx tsx prisma/seed.ts",
     "seed:test": "dotenv -e .env.test.local -- npx tsx prisma/seed-test.ts"
