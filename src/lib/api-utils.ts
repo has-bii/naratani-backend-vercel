@@ -1,6 +1,7 @@
 import { UserRole } from "@/generated/prisma/enums"
 import { auth } from "@/lib/auth"
 import {
+  BadRequestException,
   ForbiddenException,
   HttpException,
   InternalServerException,
@@ -8,6 +9,7 @@ import {
 } from "@/lib/exceptions"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
+import z, { ZodError } from "zod"
 
 export type Session = NonNullable<Awaited<ReturnType<typeof auth.api.getSession>>>
 
@@ -72,19 +74,6 @@ export function createdResponse(data: unknown, message = "Resource created succe
   )
 }
 
-export async function withErrorHandler<T>(handler: () => Promise<T>): Promise<T | NextResponse> {
-  try {
-    return await handler()
-  } catch (error) {
-    if (error instanceof HttpException) {
-      return error.toResponse()
-    }
-
-    console.error("Unhandled error:", error)
-    return new InternalServerException().toResponse()
-  }
-}
-
 export interface PaginationMeta {
   page: number
   limit: number
@@ -103,4 +92,15 @@ export function getPaginationInfo(page: number, limit: number, total: number): P
     hasNext: (page + 1) * limit < total,
     hasPrev: page > 0,
   }
+}
+
+export function handleApiError(error: unknown, path: string) {
+  if (error instanceof HttpException) return error.toResponse()
+
+  if (error instanceof ZodError) {
+    return new BadRequestException(z.prettifyError(error), "VALIDATION_ERROR").toResponse()
+  }
+
+  console.error(`Unhandled error on ${path}`, error)
+  return new InternalServerException().toResponse()
 }

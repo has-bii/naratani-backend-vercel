@@ -1,4 +1,4 @@
-import { requirePermission, successResponse, withErrorHandler } from "@/lib/api-utils"
+import { handleApiError, requirePermission, successResponse } from "@/lib/api-utils"
 import { ConflictException, NotFoundException } from "@/lib/exceptions"
 import prisma from "@/lib/prisma"
 import { updateCategorySchema } from "@/validations/category.validation"
@@ -6,11 +6,6 @@ import { updateCategorySchema } from "@/validations/category.validation"
 async function findCategory(id: string) {
   const category = await prisma.productCategory.findUnique({
     where: { id },
-    include: {
-      _count: {
-        select: { products: true },
-      },
-    },
   })
 
   if (!category) {
@@ -21,18 +16,20 @@ async function findCategory(id: string) {
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  return withErrorHandler(async () => {
+  try {
     await requirePermission({ category: ["read"] })
 
     const { id } = await params
     const category = await findCategory(id)
 
     return successResponse(category)
-  })
+  } catch (error) {
+    return handleApiError(error, "GET /categories/[id]")
+  }
 }
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  return withErrorHandler(async () => {
+  try {
     await requirePermission({ category: ["update"] })
 
     const { id } = await params
@@ -41,33 +38,22 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const body = await request.json()
     const validatedData = updateCategorySchema.parse(body)
 
-    try {
-      const category = await prisma.productCategory.update({
-        where: { id },
-        data: validatedData,
-        include: {
-          _count: {
-            select: { products: true },
-          },
-        },
-      })
+    const category = await prisma.productCategory.update({
+      where: { id },
+      data: validatedData,
+    })
 
-      return successResponse(category, "Category updated successfully")
-    } catch (error) {
-      if (error instanceof Error && "code" in error && error.code === "P2002") {
-        throw new ConflictException("Category with this name already exists")
-      }
-      throw error
+    return successResponse(category, "Category updated successfully")
+  } catch (error) {
+    if (error instanceof Error && "code" in error && error.code === "P2002") {
+      return new ConflictException("Category with this name already exists").toResponse()
     }
-  })
-}
-
-export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  return PUT(request, { params })
+    return handleApiError(error, "PUT /categories/[id]")
+  }
 }
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  return withErrorHandler(async () => {
+  try {
     await requirePermission({ category: ["delete"] })
 
     const { id } = await params
@@ -78,5 +64,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     })
 
     return successResponse(null, "Category deleted successfully")
-  })
+  } catch (error) {
+    return handleApiError(error, "DELETE /categories/[id]")
+  }
 }

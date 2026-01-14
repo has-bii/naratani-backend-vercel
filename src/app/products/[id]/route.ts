@@ -1,4 +1,4 @@
-import { requirePermission, successResponse, withErrorHandler } from "@/lib/api-utils"
+import { handleApiError, requirePermission, successResponse } from "@/lib/api-utils"
 import { ConflictException, NotFoundException } from "@/lib/exceptions"
 import prisma from "@/lib/prisma"
 import { slugify } from "@/utils/slugify"
@@ -24,18 +24,20 @@ async function findProduct(id: string) {
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  return withErrorHandler(async () => {
+  try {
     await requirePermission({ product: ["read"] })
 
     const { id } = await params
     const product = await findProduct(id)
 
     return successResponse(product)
-  })
+  } catch (error) {
+    return handleApiError(error, "GET /products/[id]")
+  }
 }
 
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  return withErrorHandler(async () => {
+  try {
     await requirePermission({ product: ["update"] })
 
     const { id } = await params
@@ -44,28 +46,26 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const body = await request.json()
     const validatedData = updateProductSchema.parse(body)
 
-    try {
-      const product = await prisma.product.update({
-        where: { id: existingProduct.id },
-        data: {
-          ...validatedData,
-          ...(validatedData.name && { slug: slugify(validatedData.name) }),
+    const product = await prisma.product.update({
+      where: { id: existingProduct.id },
+      data: {
+        ...validatedData,
+        ...(validatedData.name && { slug: slugify(validatedData.name) }),
+      },
+      include: {
+        category: {
+          select: { id: true, name: true },
         },
-        include: {
-          category: {
-            select: { id: true, name: true },
-          },
-        },
-      })
+      },
+    })
 
-      return successResponse(product, "Product updated successfully")
-    } catch (error) {
-      if (error instanceof Error && "code" in error && error.code === "P2002") {
-        throw new ConflictException("Product with this slug already exists")
-      }
-      throw error
+    return successResponse(product, "Product updated successfully")
+  } catch (error) {
+    if (error instanceof Error && "code" in error && error.code === "P2002") {
+      return new ConflictException("Product with this slug already exists").toResponse()
     }
-  })
+    return handleApiError(error, "PUT /products/[id]")
+  }
 }
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -73,7 +73,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  return withErrorHandler(async () => {
+  try {
     await requirePermission({ product: ["delete"] })
 
     const { id } = await params
@@ -84,5 +84,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     })
 
     return successResponse(null, "Product deleted successfully")
-  })
+  } catch (error) {
+    return handleApiError(error, "DELETE /products/[id]")
+  }
 }

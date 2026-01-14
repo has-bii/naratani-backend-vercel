@@ -1,11 +1,15 @@
-import { createdResponse, requirePermission, successResponse, withErrorHandler } from "@/lib/api-utils"
+import {
+  createdResponse,
+  handleApiError,
+  requirePermission,
+  successResponse,
+} from "@/lib/api-utils"
 import { ConflictException } from "@/lib/exceptions"
 import prisma from "@/lib/prisma"
 import { createCategorySchema } from "@/validations/category.validation"
-import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
-  return withErrorHandler(async () => {
+  try {
     await requirePermission({ category: ["read"] })
 
     const searchParams = new URL(request.url).searchParams
@@ -29,37 +33,28 @@ export async function GET(request: Request) {
       }),
     })
 
-    return NextResponse.json({
-      error: null,
-      message: "ok",
-      data: categories,
-    })
-  })
+    return successResponse(categories)
+  } catch (error) {
+    return handleApiError(error, "GET /categories")
+  }
 }
 
 export async function POST(request: Request) {
-  return withErrorHandler(async () => {
+  try {
     await requirePermission({ category: ["create"] })
 
     const body = await request.json()
     const validatedData = createCategorySchema.parse(body)
+    const category = await prisma.productCategory.create({
+      data: validatedData,
+    })
 
-    try {
-      const category = await prisma.productCategory.create({
-        data: validatedData,
-        include: {
-          _count: {
-            select: { products: true },
-          },
-        },
-      })
-
-      return createdResponse(category, "Category created successfully")
-    } catch (error) {
-      if (error instanceof Error && "code" in error && error.code === "P2002") {
-        throw new ConflictException("Category with this name already exists")
-      }
-      throw error
+    return createdResponse(category, "Category created successfully")
+  } catch (error) {
+    if (error instanceof Error && "code" in error && error.code === "P2002") {
+      return new ConflictException("Category with this name already exists").toResponse()
     }
-  })
+
+    return handleApiError(error, "POST /categories")
+  }
 }

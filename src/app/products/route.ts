@@ -1,4 +1,10 @@
-import { createdResponse, getPaginationInfo, requirePermission, withErrorHandler } from "@/lib/api-utils"
+import {
+  createdResponse,
+  getPaginationInfo,
+  handleApiError,
+  requirePermission,
+  successResponse,
+} from "@/lib/api-utils"
 import { ConflictException } from "@/lib/exceptions"
 import prisma from "@/lib/prisma"
 import { slugify } from "@/utils/slugify"
@@ -6,7 +12,7 @@ import { createProductSchema, getProductQuerySchema } from "@/validations/produc
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
-  return withErrorHandler(async () => {
+  try {
     await requirePermission({ product: ["read"] })
 
     const query = getProductQuerySchema.parse(Object.fromEntries(new URL(request.url).searchParams))
@@ -46,43 +52,39 @@ export async function GET(request: Request) {
       prisma.product.count({ where }),
     ])
 
-    return NextResponse.json({
-      error: null,
-      message: "ok",
-      data: {
-        data: products,
-        pagination: getPaginationInfo(page, limit, total),
-      },
+    return successResponse({
+      data: products,
+      pagination: getPaginationInfo(page, limit, total),
     })
-  })
+  } catch (error) {
+    return handleApiError(error, "GET /products")
+  }
 }
 
 export async function POST(request: Request) {
-  return withErrorHandler(async () => {
+  try {
     await requirePermission({ product: ["create"] })
 
     const body = await request.json()
     const validatedData = createProductSchema.parse(body)
 
-    try {
-      const product = await prisma.product.create({
-        data: {
-          ...validatedData,
-          slug: slugify(validatedData.name),
+    const product = await prisma.product.create({
+      data: {
+        ...validatedData,
+        slug: slugify(validatedData.name),
+      },
+      include: {
+        category: {
+          select: { id: true, name: true },
         },
-        include: {
-          category: {
-            select: { id: true, name: true },
-          },
-        },
-      })
+      },
+    })
 
-      return createdResponse(product, "Product created successfully")
-    } catch (error) {
-      if (error instanceof Error && "code" in error && error.code === "P2002") {
-        throw new ConflictException("Product with this slug already exists")
-      }
-      throw error
+    return createdResponse(product, "Product created successfully")
+  } catch (error) {
+    if (error instanceof Error && "code" in error && error.code === "P2002") {
+      return new ConflictException("Product with this slug already exists").toResponse()
     }
-  })
+    return handleApiError(error, "POST /products")
+  }
 }
