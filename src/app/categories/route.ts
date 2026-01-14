@@ -1,15 +1,16 @@
-import { createdResponse, getPaginationInfo, requirePermission, withErrorHandler } from "@/lib/api-utils"
+import { createdResponse, requirePermission, successResponse, withErrorHandler } from "@/lib/api-utils"
 import { ConflictException } from "@/lib/exceptions"
 import prisma from "@/lib/prisma"
-import { createCategorySchema, getCategoryQuerySchema } from "@/validations/category.validation"
+import { createCategorySchema } from "@/validations/category.validation"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
   return withErrorHandler(async () => {
     await requirePermission({ category: ["read"] })
 
-    const query = getCategoryQuerySchema.parse(Object.fromEntries(new URL(request.url).searchParams))
-    const { page, limit, sortBy, sortOrder, search } = query
+    const searchParams = new URL(request.url).searchParams
+    const search = searchParams.get("search")
+    const includeCount = searchParams.get("includeCount") === "true"
 
     const where = {
       ...(search && {
@@ -17,28 +18,21 @@ export async function GET(request: Request) {
       }),
     }
 
-    const [categories, total] = await Promise.all([
-      prisma.productCategory.findMany({
-        where,
-        skip: page * limit,
-        take: limit,
-        orderBy: { [sortBy]: sortOrder },
+    const categories = await prisma.productCategory.findMany({
+      where,
+      ...(includeCount && {
         include: {
           _count: {
             select: { products: true },
           },
         },
       }),
-      prisma.productCategory.count({ where }),
-    ])
+    })
 
     return NextResponse.json({
       error: null,
       message: "ok",
-      data: {
-        data: categories,
-        pagination: getPaginationInfo(page, limit, total),
-      },
+      data: categories,
     })
   })
 }
