@@ -1,0 +1,718 @@
+{
+  "info": {
+    "name": "Naratani Backend Vercel",
+    "description": "API collection for Naratani Backend - Indonesian Agricultural Business Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "productId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "categoryId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "shopId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "cookie",
+    "cookie": [
+      {
+        "key": "better-auth.session_token",
+        "value": "{{sessionToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\",\n  \"name\": \"Admin User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/sign-up",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "sign-up"]
+            },
+            "description": "Register a new user with email and password"
+          },
+          "response": []
+        },
+        {
+          "name": "Sign In",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/sign-in",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "sign-in"]
+            },
+            "description": "Sign in with email and password. Session token will be stored in cookies."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Save session cookie for authenticated requests",
+                  "var cookies = pm.cookies.jar();",
+                  "console.log('Response cookies:', cookies);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sign In with Phone",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phoneNumber\": \"+6281234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/sign-in/phone",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "sign-in", "phone"]
+            },
+            "description": "Request OTP for phone number authentication"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Phone OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phoneNumber\": \"+6281234567890\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/phone-otp",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "phone-otp"]
+            },
+            "description": "Verify OTP code sent to phone number"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/get-session",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "get-session"]
+            },
+            "description": "Get current authenticated user session"
+          },
+          "response": []
+        },
+        {
+          "name": "Sign Out",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/sign-out",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "sign-out"]
+            },
+            "description": "Sign out and clear session"
+          },
+          "response": []
+        }
+      ],
+      "description": "Authentication endpoints for user registration, login, and session management"
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products?page=0&limit=10&sortBy=createdAt&sortOrder=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0",
+                  "description": "Page number (default: 0)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (default: 10)"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt",
+                  "description": "Sort field: id|name|price|stock|createdAt|updatedAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc",
+                  "description": "Sort order: asc|desc"
+                },
+                {
+                  "key": "category",
+                  "value": "",
+                  "description": "Filter by category ID (UUID)",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search in name and slug",
+                  "disabled": true
+                },
+                {
+                  "key": "minPrice",
+                  "value": "",
+                  "description": "Minimum price filter",
+                  "disabled": true
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "",
+                  "description": "Maximum price filter",
+                  "disabled": true
+                },
+                {
+                  "key": "inStock",
+                  "value": "",
+                  "description": "Filter by stock availability (true/false)",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get paginated list of products with optional filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Organic Rice\",\n  \"price\": 15000,\n  \"stock\": 100,\n  \"categoryId\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            },
+            "description": "Create a new product (requires Admin role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{productId}}",
+                  "description": "Product ID or slug"
+                }
+              ]
+            },
+            "description": "Get a specific product by ID or slug"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Product Name\",\n  \"price\": 20000,\n  \"stock\": 50,\n  \"categoryId\": \"\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{productId}}",
+                  "description": "Product ID"
+                }
+              ]
+            },
+            "description": "Full update of a product (requires Admin role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 18000\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{productId}}",
+                  "description": "Product ID"
+                }
+              ]
+            },
+            "description": "Partial update of a product (requires Admin role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{productId}}",
+                  "description": "Product ID"
+                }
+              ]
+            },
+            "description": "Delete a product (requires Admin role)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Product management endpoints"
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories?search=&includeCount=true",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search in category name",
+                  "disabled": true
+                },
+                {
+                  "key": "includeCount",
+                  "value": "true",
+                  "description": "Include product count"
+                }
+              ]
+            },
+            "description": "Get list of categories with optional product count"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Vegetables\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"]
+            },
+            "description": "Create a new category (requires Admin role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{categoryId}}",
+                  "description": "Category ID"
+                }
+              ]
+            },
+            "description": "Get a specific category by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Category Name\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{categoryId}}",
+                  "description": "Category ID"
+                }
+              ]
+            },
+            "description": "Full update of a category (requires Admin role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Category Name\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{categoryId}}",
+                  "description": "Category ID"
+                }
+              ]
+            },
+            "description": "Partial update of a category (requires Admin role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{categoryId}}",
+                  "description": "Category ID"
+                }
+              ]
+            },
+            "description": "Delete a category (requires Admin role)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Category management endpoints"
+    },
+    {
+      "name": "Shops",
+      "item": [
+        {
+          "name": "Get All Shops",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shops?page=0&limit=10&sortBy=createdAt&sortOrder=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0",
+                  "description": "Page number (default: 0)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (default: 10)"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt",
+                  "description": "Sort field: id|name|createdAt|updatedAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc",
+                  "description": "Sort order: asc|desc"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search in shop name",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get paginated list of shops with optional filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Shop",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jakarta Main Store\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shops",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops"]
+            },
+            "description": "Create a new shop (requires Admin role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Shop by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shops/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{shopId}}",
+                  "description": "Shop ID"
+                }
+              ]
+            },
+            "description": "Get a specific shop by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Shop (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Shop Name\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shops/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{shopId}}",
+                  "description": "Shop ID"
+                }
+              ]
+            },
+            "description": "Full update of a shop (requires Admin role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Shop (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Shop Name\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shops/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{shopId}}",
+                  "description": "Shop ID"
+                }
+              ]
+            },
+            "description": "Partial update of a shop (requires Admin role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Shop",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shops/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{shopId}}",
+                  "description": "Shop ID"
+                }
+              ]
+            },
+            "description": "Delete a shop (requires Admin role)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Shop management endpoints"
+    }
+  ]
+}
