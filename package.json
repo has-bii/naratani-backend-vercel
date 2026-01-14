@@ -12,11 +12,11 @@
     "test:run": "vitest run"
   },
   "dependencies": {
-    "@better-auth/expo": "^1.4.10",
+    "@better-auth/expo": "^1.4.12",
     "@node-rs/argon2": "^2.0.2",
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
-    "better-auth": "^1.4.10",
+    "better-auth": "^1.4.12",
     "dotenv": "^17.2.3",
     "next": "16.1.1",
     "pg": "^8.16.3",
@@ -25,14 +25,12 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
-    "@types/node": "^20",
+    "@types/node": "^20.19.29",
     "@types/pg": "^8.16.0",
-    "@types/react": "^19",
-    "@vitest/ui": "^4.0.17",
+    "@types/react": "^19.2.8",
     "prettier": "^3.7.4",
     "prisma": "^7.2.0",
     "tsx": "^4.21.0",
-    "typescript": "^5",
-    "vitest": "^4.0.17"
+    "typescript": "^5.9.3"
   }
 }
