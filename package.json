@@ -9,7 +9,7 @@
     "postinstall": "prisma generate",
     "prisma-migrate:test": "dotenv -e .env.test.local -- npx prisma migrate deploy",
     "seed": "npx tsx prisma/seed.ts",
-    "seed:test": "dotenv -e .env.test.local npx tsx prisma/seed-test.ts"
+    "seed:test": "dotenv -e .env.test.local -- npx tsx prisma/seed-test.ts"
   },
   "dependencies": {
     "@better-auth/expo": "^1.4.12",
