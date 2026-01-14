@@ -160,6 +160,73 @@ All tables use `uuid(7)` for IDs and are mapped to lowercase snake_case names.
 
 Use `getPaginationInfo(page, limit, total)` from `@/lib/api-utils` for consistent pagination metadata.
 
+## Error Handling Pattern
+
+All API routes use a consistent error handling pattern:
+
+```typescript
+import { handleApiError, requirePermission, successResponse } from "@/lib/api-utils"
+
+export async function GET(request: Request) {
+  try {
+    await requirePermission({ resource: ["read"] })
+
+    // ... route logic
+
+    return successResponse(data)
+  } catch (error) {
+    return handleApiError(error, "GET /route")
+  }
+}
+```
+
+### Handling Unique Constraint Violations (P2002)
+
+For Prisma unique constraint errors (like duplicate names/slugs), use this pattern:
+
+```typescript
+export async function POST(request: Request) {
+  try {
+    await requirePermission({ resource: ["create"] })
+
+    const body = await request.json()
+    const validatedData = schema.parse(body)
+
+    const resource = await prisma.resource.create({ data: validatedData })
+
+    return createdResponse(resource, "Resource created successfully")
+  } catch (error) {
+    if (error instanceof Error && "code" in error && error.code === "P2002") {
+      return new ConflictException("Resource with this name already exists").toResponse()
+    }
+    return handleApiError(error, "POST /resource")
+  }
+}
+```
+
+### Available Response Helpers
+
+| Helper | Usage | Status |
+|--------|-------|--------|
+| `successResponse(data, message?)` | Successful GET/PUT/PATCH/DELETE | 200 |
+| `createdResponse(data, message?)` | Successful POST | 201 |
+| `handleApiError(error, path)` | Error handling in catch blocks | - |
+
+### Available Exception Classes
+
+```typescript
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  InternalServerException,
+  NotFoundException,
+  UnauthorizedException,
+} from "@/lib/exceptions"
+```
+
+All exceptions have a `.toResponse()` method that returns a `NextResponse`.
+
 ## Role-Based Permissions
 
 Defined in `src/lib/permissions.ts`:
@@ -179,7 +246,46 @@ Use `requirePermission({ resource: ["action"] })` in route handlers to enforce p
 3. **Validation**: Add Zod schemas to `src/validations/`
 4. **Auth Changes**: Modify `src/lib/auth.ts`
 5. **Permissions**: Update `src/lib/permissions.ts` and the permissions table in this file
-6. **Documentation**: **Always update this CLAUDE.md file when adding new features**
+6. **Error Handling**: Follow the standard error handling pattern (try-catch + `handleApiError`)
+7. **Documentation**: **Always update this CLAUDE.md file when adding new features**
+
+### Route Handler Template
+
+```typescript
+import { createdResponse, handleApiError, requirePermission, successResponse } from "@/lib/api-utils"
+import { ConflictException } from "@/lib/exceptions"
+import prisma from "@/lib/prisma"
+
+export async function GET(request: Request) {
+  try {
+    await requirePermission({ resource: ["read"] })
+
+    const resources = await prisma.resource.findMany()
+
+    return successResponse(resources)
+  } catch (error) {
+    return handleApiError(error, "GET /resource")
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    await requirePermission({ resource: ["create"] })
+
+    const body = await request.json()
+    const validatedData = schema.parse(body)
+
+    const resource = await prisma.resource.create({ data: validatedData })
+
+    return createdResponse(resource, "Resource created successfully")
+  } catch (error) {
+    if (error instanceof Error && "code" in error && error.code === "P2002") {
+      return new ConflictException("Resource already exists").toResponse()
+    }
+    return handleApiError(error, "POST /resource")
+  }
+}
+```
 
 ## Conventional Commit Style
 
