@@ -3,7 +3,7 @@
     "name": "Naratani Backend Vercel",
     "description": "API collection for Naratani Backend - Indonesian Agricultural Business Management System",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "variable": [
     {
@@ -23,6 +23,11 @@
     },
     {
       "key": "shopId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "orderId",
       "value": "",
       "type": "string"
     }
@@ -74,7 +79,7 @@
           "response": []
         },
         {
-          "name": "Sign In",
+          "name": "Sign In with Email",
           "request": {
             "method": "POST",
             "header": [
@@ -88,7 +93,7 @@
               "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/auth/sign-in",
+              "raw": "{{baseUrl}}/api/auth/sign-in/email",
               "host": ["{{baseUrl}}"],
               "path": ["api", "auth", "sign-in"]
             },
@@ -713,6 +718,185 @@
         }
       ],
       "description": "Shop management endpoints"
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders?page=0&limit=10&sortBy=createdAt&sortOrder=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0",
+                  "description": "Page number (default: 0)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Items per page (default: 10)"
+                },
+                {
+                  "key": "sortBy",
+                  "value": "createdAt",
+                  "description": "Sort field: id|status|totalAmount|createdAt|updatedAt"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc",
+                  "description": "Sort order: asc|desc"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Filter by status: PENDING|COMPLETED|CANCELLED",
+                  "disabled": true
+                },
+                {
+                  "key": "shopId",
+                  "value": "",
+                  "description": "Filter by shop ID (UUID)",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get paginated list of orders with optional filtering (requires Admin/Sales role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shopId\": \"{{shopId}}\",\n  \"items\": [\n    {\n      \"productId\": \"{{productId}}\",\n      \"quantity\": 2\n    },\n    {\n      \"productId\": \"{{productId}}\",\n      \"quantity\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"]
+            },
+            "description": "Create a new order (requires Admin/Sales role). Product stock will be reduced automatically."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{orderId}}",
+                  "description": "Order ID"
+                }
+              ]
+            },
+            "description": "Get a specific order with items and product details"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Order Status (PUT)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"COMPLETED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{orderId}}",
+                  "description": "Order ID"
+                }
+              ]
+            },
+            "description": "Update order status (requires Admin/Sales role). Cancelling restores product stock."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Order Status (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CANCELLED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/orders/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{orderId}}",
+                  "description": "Order ID"
+                }
+              ]
+            },
+            "description": "Partial update of order status (requires Admin/Sales role)"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Order",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{orderId}}",
+                  "description": "Order ID"
+                }
+              ]
+            },
+            "description": "Delete a pending order and restore product stock (requires Admin/Sales role). Only pending orders can be deleted."
+          },
+          "response": []
+        }
+      ],
+      "description": "Order management endpoints (Admin/Sales only)"
     }
   ]
 }

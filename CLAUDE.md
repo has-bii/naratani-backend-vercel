@@ -67,6 +67,9 @@ src/
 │   ├── shops/
 │   │   ├── route.ts                   # Shop CRUD (GET, POST)
 │   │   └── [id]/route.ts              # Shop by ID (GET, PATCH, DELETE)
+│   ├── orders/
+│   │   ├── route.ts                   # Order CRUD (GET, POST)
+│   │   └── [id]/route.ts              # Order by ID (GET, PUT, DELETE)
 │   └── generated/prisma/              # Auto-generated Prisma client
 │
 ├── lib/
@@ -84,7 +87,8 @@ src/
     ├── auth.validation.ts             # Auth-related Zod schemas
     ├── product.validation.ts          # Product-related Zod schemas
     ├── category.validation.ts         # Category-related Zod schemas
-    └── shop.validation.ts             # Shop-related Zod schemas
+    ├── shop.validation.ts             # Shop-related Zod schemas
+    └── order.validation.ts            # Order-related Zod schemas
 
 prisma/
 ├── schema.prisma                      # Database schema definition
@@ -125,8 +129,17 @@ Core models (defined in `prisma/schema.prisma`):
 - **Shop**: Shop entities
 - **ProductCategory**: Categorization for products
 - **Product**: Products with slug, price, stock, category relation
+- **Order**: Orders with shop, status, total amount
+- **OrderItem**: Order items with product, quantity, price (stock tracked)
 
 All tables use `uuid(7)` for IDs and are mapped to lowercase snake_case names.
+
+### Order Statuses
+
+Orders support three statuses:
+- `PENDING` - Initial state, can be modified or deleted
+- `COMPLETED` - Order fulfilled, cannot be deleted
+- `CANCELLED` - Order cancelled, stock is restored
 
 ## API Response Conventions
 
@@ -231,13 +244,24 @@ All exceptions have a `.toResponse()` method that returns a `NextResponse`.
 
 Defined in `src/lib/permissions.ts`:
 
-| Role | Product | Category | Shop |
-|------|---------|----------|-------|
-| Admin | create, read, update, delete | create, read, update, delete | create, read, update, delete |
-| User | read | read | read |
-| Sales | read | read | read |
+| Role | Product | Category | Shop | Order |
+|------|---------|----------|-------|-------|
+| Admin | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete |
+| User | read | read | read | - |
+| Sales | read | read | read | create, read, update, delete |
 
 Use `requirePermission({ resource: ["action"] })` in route handlers to enforce permissions.
+
+### Stock Management
+
+When creating an order:
+- Product stock is automatically reduced by the ordered quantity
+- Total amount is calculated based on current product prices
+- Transaction ensures stock is only deducted if order creation succeeds
+
+When cancelling an order:
+- Product stock is automatically restored to the original quantity
+- Transaction ensures stock is only restored if status update succeeds
 
 ## Adding New Features
 

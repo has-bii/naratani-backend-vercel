@@ -87,8 +87,9 @@ model Verification {
 }
 
 model Shop {
-  id        String   @id @default(uuid(7)) @db.Uuid
-  name      String   @unique
+  id     String  @id @default(uuid(7)) @db.Uuid
+  name   String  @unique
+  orders Order[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -105,17 +106,53 @@ model ProductCategory {
 }
 
 model Product {
-  id         String           @id @default(uuid(7)) @db.Uuid
-  name       String
-  slug       String
-  price      Int              @default(0)
-  stock      Int              @default(0)
-  categoryId String?          @db.Uuid
-  category   ProductCategory? @relation(references: [id], fields: [categoryId], onUpdate: Cascade, onDelete: SetNull)
-  createdAt  DateTime         @default(now())
-  updatedAt  DateTime         @updatedAt
+  id          String           @id @default(uuid(7)) @db.Uuid
+  name        String
+  slug        String
+  price       Int              @default(0)
+  stock       Int              @default(0)
+  categoryId  String?          @db.Uuid
+  category    ProductCategory? @relation(references: [id], fields: [categoryId], onUpdate: Cascade, onDelete: SetNull)
+  orderItems  OrderItem[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 
   @@unique([slug])
   @@index([categoryId])
   @@map("product")
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+model Order {
+  id          String      @id @default(uuid(7)) @db.Uuid
+  shopId      String      @db.Uuid
+  shop        Shop        @relation(fields: [shopId], references: [id], onDelete: Restrict)
+  status      OrderStatus @default(PENDING)
+  totalAmount Int
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([shopId])
+  @@index([status])
+  @@map("order")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid(7)) @db.Uuid
+  orderId   String   @db.Uuid
+  productId String   @db.Uuid
+  quantity  Int
+  price     Int
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_item")
 }
