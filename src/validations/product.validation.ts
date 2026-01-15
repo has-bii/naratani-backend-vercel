@@ -43,7 +43,7 @@ export const getProductQuerySchema = z.object({
   inStock: z
     .string()
     .optional()
-    .transform((val) => val === "true"),
+    .transform((val) => (val ? val === "true" : undefined)),
 })
 
 export type CreateProductInput = z.infer<typeof createProductSchema>
