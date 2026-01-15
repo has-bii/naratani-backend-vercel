@@ -82,7 +82,7 @@ export async function POST(request: Request) {
     for (const item of items) {
       const product = products.find((p) => p.id === item.productId)
       if (!product || product.stock < item.quantity) {
-        return new ConflictException("Stok produk tidak mencukupi").toResponse()
+        return new BadRequestException(`Stok ${product?.name} tidak mencukupi`).toResponse()
       }
     }
 
