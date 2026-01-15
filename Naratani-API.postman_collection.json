@@ -1,9 +1,9 @@
 {
   "info": {
     "name": "Naratani Backend Vercel",
-    "description": "API collection for Naratani Backend - Indonesian Agricultural Business Management System",
+    "description": "API collection for Naratani Backend - Indonesian Agricultural Business Management System\n\n---\n\n## TypeScript Types\n\n```typescript\n// ========== PRISMA MODELS ==========\n\ntype UserRole = 'user' | 'admin' | 'sales';\ntype OrderStatus = 'PENDING' | 'COMPLETED' | 'CANCELLED';\n\ninterface User {\n  id: string;\n  name: string;\n  email: string;\n  emailVerified: boolean;\n  image?: string;\n  createdAt: string;\n  updatedAt: string;\n  phoneNumber?: string;\n  phoneNumberVerified?: boolean;\n  role: UserRole;\n  banned?: boolean;\n  banReason?: string;\n  banExpires?: string;\n}\n\ninterface Shop {\n  id: string;\n  name: string;\n  createdAt: string;\n  updatedAt: string;\n}\n\ninterface ProductCategory {\n  id: string;\n  name: string;\n}\n\ninterface Product {\n  id: string;\n  name: string;\n  slug: string;\n  price: number;\n  stock: number;\n  categoryId?: string;\n  category?: ProductCategory;\n  createdAt: string;\n  updatedAt: string;\n}\n\ninterface OrderItem {\n  id: string;\n  productId: string;\n  product: Product;\n  quantity: number;\n  price: number;\n}\n\ninterface Order {\n  id: string;\n  shopId: string;\n  shop: Shop;\n  status: OrderStatus;\n  totalAmount: number;\n  orderItems: OrderItem[];\n  createdAt: string;\n  updatedAt: string;\n}\n\n// ========== API RESPONSE TYPES ==========\n\ninterface ApiResponse<T> {\n  error: string | null;\n  message: string;\n  data: T;\n}\n\ninterface PaginatedData<T> {\n  data: T[];\n  pagination: {\n    page: number;\n    limit: number;\n    total: number;\n    totalPages: number;\n    hasNext: boolean;\n    hasPrev: boolean;\n  };\n}\n\ninterface ApiError {\n  error: string;\n  message: string;\n  statusCode: number;\n}\n\n// ========== REQUEST TYPES ==========\n\ninterface CreateProductRequest {\n  name: string;\n  price: number;\n  stock: number;\n  categoryId?: string;\n}\n\ninterface UpdateProductRequest {\n  name?: string;\n  price?: number;\n  stock?: number;\n  categoryId?: string;\n}\n\ninterface CreateCategoryRequest {\n  name: string;\n}\n\ninterface CreateShopRequest {\n  name: string;\n}\n\ninterface CreateOrderRequest {\n  shopId: string;\n  items: {\n    productId: string;\n    quantity: number;\n  }[];\n}\n\ninterface UpdateOrderRequest {\n  status: OrderStatus;\n}\n```\n\n---\n\n## Error Responses\n\n| Status | Description |\n|--------|-------------|\n| 400 | Validation error (Zod) |\n| 401 | Unauthorized (no session) |\n| 403 | Forbidden (insufficient permissions) |\n| 404 | Resource not found |\n| 409 | Conflict (duplicate resource) |\n| 500 | Internal server error |\n\n**Error Response Shape:**\n```json\n{\n  \"error\": \"Error type\",\n  \"message\": \"Human-readable message\",\n  \"statusCode\": 400\n}\n```",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "version": "1.1.0"
+    "version": "2.0.0"
   },
   "variable": [
     {
@@ -52,145 +52,6 @@
     }
   ],
   "item": [
-    {
-      "name": "Auth",
-      "item": [
-        {
-          "name": "Sign Up",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\",\n  \"name\": \"Admin User\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/sign-up",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "sign-up"]
-            },
-            "description": "Register a new user with email and password"
-          },
-          "response": []
-        },
-        {
-          "name": "Sign In with Email",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/sign-in/email",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "sign-in"]
-            },
-            "description": "Sign in with email and password. Session token will be stored in cookies."
-          },
-          "response": [],
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "// Save session cookie for authenticated requests",
-                  "var cookies = pm.cookies.jar();",
-                  "console.log('Response cookies:', cookies);"
-                ]
-              }
-            }
-          ]
-        },
-        {
-          "name": "Sign In with Phone",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"phoneNumber\": \"+6281234567890\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/sign-in/phone",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "sign-in", "phone"]
-            },
-            "description": "Request OTP for phone number authentication"
-          },
-          "response": []
-        },
-        {
-          "name": "Verify Phone OTP",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"phoneNumber\": \"+6281234567890\",\n  \"otp\": \"123456\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/phone-otp",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "phone-otp"]
-            },
-            "description": "Verify OTP code sent to phone number"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Session",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/get-session",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "get-session"]
-            },
-            "description": "Get current authenticated user session"
-          },
-          "response": []
-        },
-        {
-          "name": "Sign Out",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/auth/sign-out",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "sign-out"]
-            },
-            "description": "Sign out and clear session"
-          },
-          "response": []
-        }
-      ],
-      "description": "Authentication endpoints for user registration, login, and session management"
-    },
     {
       "name": "Products",
       "item": [
@@ -256,9 +117,33 @@
                 }
               ]
             },
-            "description": "Get paginated list of products with optional filtering"
+            "description": "Get paginated list of products with optional filtering\n\n**Permission:** Any role\n\n**Response Type:** `ApiResponse<PaginatedData<Product>>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n        \"name\": \"Organic Rice\",\n        \"slug\": \"organic-rice\",\n        \"price\": 15000,\n        \"stock\": 100,\n        \"categoryId\": \"01234567-89ab-cdef-0123-456789abcdef\",\n        \"category\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n          \"name\": \"Grains\"\n        },\n        \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n        \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"page\": 0,\n      \"limit\": 10,\n      \"total\": 100,\n      \"totalPages\": 10,\n      \"hasNext\": true,\n      \"hasPrev\": false\n    }\n  }\n}\n```\n\n**Possible Errors:** 400, 401, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/products?page=0&limit=10",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["products"],
+                  "query": [
+                    {"key": "page", "value": "0"},
+                    {"key": "limit", "value": "10"}
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {"key": "Content-Type", "value": "application/json"}
+              ],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n        \"name\": \"Organic Rice\",\n        \"slug\": \"organic-rice\",\n        \"price\": 15000,\n        \"stock\": 100,\n        \"categoryId\": \"01234567-89ab-cdef-0123-456789abcdef\",\n        \"category\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n          \"name\": \"Grains\"\n        },\n        \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n        \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"page\": 0,\n      \"limit\": 10,\n      \"total\": 1,\n      \"totalPages\": 1,\n      \"hasNext\": false,\n      \"hasPrev\": false\n    }\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Create Product",
@@ -279,9 +164,61 @@
               "host": ["{{baseUrl}}"],
               "path": ["products"]
             },
-            "description": "Create a new product (requires Admin role)"
+            "description": "Create a new product\n\n**Permission:** Admin only\n\n**Request Type:** `CreateProductRequest`\n**Response Type:** `ApiResponse<Product>`\n\n---\n\n**Success (201):**\n```json\n{\n  \"error\": null,\n  \"message\": \"Produk berhasil dibuat\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Organic Rice\",\n    \"slug\": \"organic-rice\",\n    \"price\": 15000,\n    \"stock\": 100,\n    \"categoryId\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}\n```\n\n**Possible Errors:** 400, 401, 403, 404, 409, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Organic Rice\",\n  \"price\": 15000,\n  \"stock\": 100,\n  \"categoryId\": \"01234567-89ab-cdef-0123-456789abcdef\"\n}"
+                },
+                "url": {"raw": "{{baseUrl}}/products"}
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Produk berhasil dibuat\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Organic Rice\",\n    \"slug\": \"organic-rice\",\n    \"price\": 15000,\n    \"stock\": 100,\n    \"categoryId\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Error 409 Conflict",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Existing Product\",\n  \"price\": 10000,\n  \"stock\": 50\n}"
+                },
+                "url": {"raw": "{{baseUrl}}/products"}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Conflict\",\n  \"message\": \"Produk dengan nama ini sudah ada\",\n  \"statusCode\": 409\n}"
+            },
+            {
+              "name": "Error 404 Category Not Found",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"New Product\",\n  \"price\": 10000,\n  \"stock\": 50,\n  \"categoryId\": \"00000000-0000-0000-0000-000000000000\"\n}"
+                },
+                "url": {"raw": "{{baseUrl}}/products"}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Not Found\",\n  \"message\": \"Kategori tidak ditemukan\",\n  \"statusCode\": 404\n}"
+            }
+          ]
         },
         {
           "name": "Get Product by ID",
@@ -300,9 +237,36 @@
                 }
               ]
             },
-            "description": "Get a specific product by ID or slug"
+            "description": "Get a specific product by ID or slug\n\n**Permission:** Any role\n\n**Response Type:** `ApiResponse<Product>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Organic Rice\",\n    \"slug\": \"organic-rice\",\n    \"price\": 15000,\n    \"stock\": 100,\n    \"categoryId\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"category\": {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n      \"name\": \"Grains\"\n    },\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}\n```\n\n**Possible Errors:** 400, 404, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/products/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Organic Rice\",\n    \"slug\": \"organic-rice\",\n    \"price\": 15000,\n    \"stock\": 100,\n    \"categoryId\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"category\": {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n      \"name\": \"Grains\"\n    },\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Error 404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/products/00000000-0000-0000-0000-000000000000"}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Not Found\",\n  \"message\": \"Produk tidak ditemukan\",\n  \"statusCode\": 404\n}"
+            }
+          ]
         },
         {
           "name": "Update Product (PUT)",
@@ -330,9 +294,27 @@
                 }
               ]
             },
-            "description": "Full update of a product (requires Admin role)"
+            "description": "Full update of a product\n\n**Permission:** Admin only\n\n**Request Type:** `UpdateProductRequest`\n**Response Type:** `ApiResponse<Product>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"Produk berhasil diperbarui\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Updated Product Name\",\n    \"slug\": \"updated-product-name\",\n    \"price\": 20000,\n    \"stock\": 50,\n    \"categoryId\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T11:00:00.000Z\"\n  }\n}\n```\n\n**Possible Errors:** 400, 401, 403, 404, 409, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Updated Product Name\",\n  \"price\": 20000,\n  \"stock\": 50\n}"
+                },
+                "url": {"raw": "{{baseUrl}}/products/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Produk berhasil diperbarui\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Updated Product Name\",\n    \"slug\": \"updated-product-name\",\n    \"price\": 20000,\n    \"stock\": 50,\n    \"categoryId\": null,\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T11:00:00.000Z\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Update Product (PATCH)",
@@ -360,9 +342,24 @@
                 }
               ]
             },
-            "description": "Partial update of a product (requires Admin role)"
+            "description": "Partial update of a product\n\n**Permission:** Admin only\n\n**Request Type:** `Partial<UpdateProductRequest>`\n**Response Type:** `ApiResponse<Product>`\n\n---\n\n**Success (200):** Same as PUT\n\n**Possible Errors:** 400, 401, 403, 404, 409, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\n  \"price\": 18000\n}"},
+                "url": {"raw": "{{baseUrl}}/products/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Produk berhasil diperbarui\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Organic Rice\",\n    \"slug\": \"organic-rice\",\n    \"price\": 18000,\n    \"stock\": 100,\n    \"categoryId\": null,\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T11:00:00.000Z\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Delete Product",
@@ -381,9 +378,23 @@
                 }
               ]
             },
-            "description": "Delete a product (requires Admin role)"
+            "description": "Delete a product\n\n**Permission:** Admin only\n\n**Response Type:** `ApiResponse<Product>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"Produk berhasil dihapus\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Organic Rice\",\n    \"slug\": \"organic-rice\",\n    \"price\": 15000,\n    \"stock\": 100,\n    \"categoryId\": null,\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}\n```\n\n**Possible Errors:** 401, 403, 404, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/products/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Produk berhasil dihapus\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Organic Rice\",\n    \"slug\": \"organic-rice\",\n    \"price\": 15000,\n    \"stock\": 100,\n    \"categoryId\": null,\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}"
+            }
+          ]
         }
       ],
       "description": "Product management endpoints"
@@ -414,9 +425,23 @@
                 }
               ]
             },
-            "description": "Get list of categories with optional product count"
+            "description": "Get list of categories with optional product count\n\n**Permission:** Any role\n\n**Response Type:** `ApiResponse<ProductCategory[]>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": [\n    {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n      \"name\": \"Grains\",\n      \"_count\": {\n        \"products\": 15\n      }\n    }\n  ]\n}\n```\n\n**Possible Errors:** 400, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/categories?includeCount=true"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": [\n    {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n      \"name\": \"Grains\",\n      \"_count\": {\n        \"products\": 15\n      }\n    },\n    {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdee\",\n      \"name\": \"Vegetables\",\n      \"_count\": {\n        \"products\": 23\n      }\n    }\n  ]\n}"
+            }
+          ]
         },
         {
           "name": "Create Category",
@@ -437,9 +462,38 @@
               "host": ["{{baseUrl}}"],
               "path": ["categories"]
             },
-            "description": "Create a new category (requires Admin role)"
+            "description": "Create a new category\n\n**Permission:** Admin only\n\n**Request Type:** `CreateCategoryRequest`\n**Response Type:** `ApiResponse<ProductCategory>`\n\n---\n\n**Success (201):**\n```json\n{\n  \"error\": null,\n  \"message\": \"Kategori berhasil dibuat\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Vegetables\"\n  }\n}\n```\n\n**Possible Errors:** 400, 401, 403, 409, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\n  \"name\": \"Vegetables\"\n}"},
+                "url": {"raw": "{{baseUrl}}/categories"}
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Kategori berhasil dibuat\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Vegetables\"\n  }\n}"
+            },
+            {
+              "name": "Error 409 Conflict",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\n  \"name\": \"Existing Category\"\n}"},
+                "url": {"raw": "{{baseUrl}}/categories"}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Conflict\",\n  \"message\": \"Kategori dengan nama ini sudah ada\",\n  \"statusCode\": 409\n}"
+            }
+          ]
         },
         {
           "name": "Get Category by ID",
@@ -458,9 +512,36 @@
                 }
               ]
             },
-            "description": "Get a specific category by ID"
+            "description": "Get a specific category by ID\n\n**Permission:** Any role\n\n**Response Type:** `ApiResponse<ProductCategory>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Grains\"\n  }\n}\n```\n\n**Possible Errors:** 404, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/categories/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Grains\"\n  }\n}"
+            },
+            {
+              "name": "Error 404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/categories/00000000-0000-0000-0000-000000000000"}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Not Found\",\n  \"message\": \"Kategori tidak ditemukan\",\n  \"statusCode\": 404\n}"
+            }
+          ]
         },
         {
           "name": "Update Category (PUT)",
@@ -488,9 +569,24 @@
                 }
               ]
             },
-            "description": "Full update of a category (requires Admin role)"
+            "description": "Full update of a category\n\n**Permission:** Admin only\n\n**Request Type:** `CreateCategoryRequest`\n**Response Type:** `ApiResponse<ProductCategory>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"Kategori berhasil diperbarui\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Updated Category Name\"\n  }\n}\n```\n\n**Possible Errors:** 400, 401, 403, 404, 409, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\n  \"name\": \"Updated Category Name\"\n}"},
+                "url": {"raw": "{{baseUrl}}/categories/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Kategori berhasil diperbarui\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Updated Category Name\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Update Category (PATCH)",
@@ -518,9 +614,24 @@
                 }
               ]
             },
-            "description": "Partial update of a category (requires Admin role)"
+            "description": "Partial update of a category\n\n**Permission:** Admin only\n\n**Response Type:** `ApiResponse<ProductCategory>`\n\n---\n\n**Success (200):** Same as PUT\n\n**Possible Errors:** 400, 401, 403, 404, 409, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\n  \"name\": \"New Category Name\"\n}"},
+                "url": {"raw": "{{baseUrl}}/categories/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Kategori berhasil diperbarui\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"New Category Name\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Delete Category",
@@ -539,9 +650,23 @@
                 }
               ]
             },
-            "description": "Delete a category (requires Admin role)"
+            "description": "Delete a category\n\n**Permission:** Admin only\n\n**Response Type:** `ApiResponse<ProductCategory>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"Kategori berhasil dihapus\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Vegetables\"\n  }\n}\n```\n\n**Possible Errors:** 401, 403, 404, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/categories/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Kategori berhasil dihapus\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Vegetables\"\n  }\n}"
+            }
+          ]
         }
       ],
       "description": "Category management endpoints"
@@ -587,9 +712,23 @@
                 }
               ]
             },
-            "description": "Get paginated list of shops with optional filtering"
+            "description": "Get paginated list of shops with optional filtering\n\n**Permission:** Any role\n\n**Response Type:** `ApiResponse<PaginatedData<Shop>>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n        \"name\": \"Jakarta Main Store\",\n        \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n        \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"page\": 0,\n      \"limit\": 10,\n      \"total\": 5,\n      \"totalPages\": 1,\n      \"hasNext\": false,\n      \"hasPrev\": false\n    }\n  }\n}\n```\n\n**Possible Errors:** 400, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/shops?page=0&limit=10"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n        \"name\": \"Jakarta Main Store\",\n        \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n        \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"page\": 0,\n      \"limit\": 10,\n      \"total\": 1,\n      \"totalPages\": 1,\n      \"hasNext\": false,\n      \"hasPrev\": false\n    }\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Create Shop",
@@ -610,9 +749,38 @@
               "host": ["{{baseUrl}}"],
               "path": ["shops"]
             },
-            "description": "Create a new shop (requires Admin role)"
+            "description": "Create a new shop\n\n**Permission:** Admin only\n\n**Request Type:** `CreateShopRequest`\n**Response Type:** `ApiResponse<Shop>`\n\n---\n\n**Success (201):**\n```json\n{\n  \"error\": null,\n  \"message\": \"Toko berhasil dibuat\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Jakarta Main Store\",\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}\n```\n\n**Possible Errors:** 400, 401, 403, 409, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\n  \"name\": \"Jakarta Main Store\"\n}"},
+                "url": {"raw": "{{baseUrl}}/shops"}
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Toko berhasil dibuat\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Jakarta Main Store\",\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Error 409 Conflict",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\n  \"name\": \"Existing Shop\"\n}"},
+                "url": {"raw": "{{baseUrl}}/shops"}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Conflict\",\n  \"message\": \"Toko dengan nama ini sudah ada\",\n  \"statusCode\": 409\n}"
+            }
+          ]
         },
         {
           "name": "Get Shop by ID",
@@ -631,9 +799,36 @@
                 }
               ]
             },
-            "description": "Get a specific shop by ID"
+            "description": "Get a specific shop by ID\n\n**Permission:** Any role\n\n**Response Type:** `ApiResponse<Shop>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Jakarta Main Store\",\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}\n```\n\n**Possible Errors:** 404, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/shops/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Jakarta Main Store\",\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Error 404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/shops/00000000-0000-0000-0000-000000000000"}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Not Found\",\n  \"message\": \"Toko tidak ditemukan\",\n  \"statusCode\": 404\n}"
+            }
+          ]
         },
         {
           "name": "Update Shop (PUT)",
@@ -661,9 +856,24 @@
                 }
               ]
             },
-            "description": "Full update of a shop (requires Admin role)"
+            "description": "Full update of a shop\n\n**Permission:** Admin only\n\n**Request Type:** `CreateShopRequest`\n**Response Type:** `ApiResponse<Shop>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"Toko berhasil diperbarui\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Updated Shop Name\",\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T11:00:00.000Z\"\n  }\n}\n```\n\n**Possible Errors:** 400, 401, 403, 404, 409, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\n  \"name\": \"Updated Shop Name\"\n}"},
+                "url": {"raw": "{{baseUrl}}/shops/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Toko berhasil diperbarui\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Updated Shop Name\",\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T11:00:00.000Z\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Update Shop (PATCH)",
@@ -691,9 +901,24 @@
                 }
               ]
             },
-            "description": "Partial update of a shop (requires Admin role)"
+            "description": "Partial update of a shop\n\n**Permission:** Admin only\n\n**Response Type:** `ApiResponse<Shop>`\n\n---\n\n**Success (200):** Same as PUT\n\n**Possible Errors:** 400, 401, 403, 404, 409, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\n  \"name\": \"New Shop Name\"\n}"},
+                "url": {"raw": "{{baseUrl}}/shops/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Toko berhasil diperbarui\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"New Shop Name\",\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T11:00:00.000Z\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Delete Shop",
@@ -712,9 +937,23 @@
                 }
               ]
             },
-            "description": "Delete a shop (requires Admin role)"
+            "description": "Delete a shop\n\n**Permission:** Admin only\n\n**Response Type:** `ApiResponse<Shop>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"Toko berhasil dihapus\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Jakarta Main Store\",\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}\n```\n\n**Possible Errors:** 401, 403, 404, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/shops/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Toko berhasil dihapus\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"name\": \"Jakarta Main Store\",\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}"
+            }
+          ]
         }
       ],
       "description": "Shop management endpoints"
@@ -766,9 +1005,36 @@
                 }
               ]
             },
-            "description": "Get paginated list of orders with optional filtering (requires Admin/Sales role)"
+            "description": "Get paginated list of orders with optional filtering\n\n**Permission:** Admin/Sales only\n\n**Response Type:** `ApiResponse<PaginatedData<Order>>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n        \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n        \"shop\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdee\",\n          \"name\": \"Jakarta Main Store\"\n        },\n        \"status\": \"PENDING\",\n        \"totalAmount\": 45000,\n        \"orderItems\": [\n          {\n            \"id\": \"01234567-89ab-cdef-0123-456789abcdf0\",\n            \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n            \"product\": {\n              \"id\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n              \"name\": \"Organic Rice\",\n              \"price\": 15000\n            },\n            \"quantity\": 3,\n            \"price\": 15000\n          }\n        ],\n        \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n        \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"page\": 0,\n      \"limit\": 10,\n      \"total\": 50,\n      \"totalPages\": 5,\n      \"hasNext\": true,\n      \"hasPrev\": false\n    }\n  }\n}\n```\n\n**Possible Errors:** 400, 401, 403, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/orders?page=0&limit=10"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"data\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n        \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n        \"shop\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdee\",\n          \"name\": \"Jakarta Main Store\"\n        },\n        \"status\": \"PENDING\",\n        \"totalAmount\": 45000,\n        \"orderItems\": [\n          {\n            \"id\": \"01234567-89ab-cdef-0123-456789abcdf0\",\n            \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n            \"product\": {\n              \"id\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n              \"name\": \"Organic Rice\",\n              \"price\": 15000\n            },\n            \"quantity\": 3,\n            \"price\": 15000\n          }\n        ],\n        \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n        \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n      }\n    ],\n    \"pagination\": {\n      \"page\": 0,\n      \"limit\": 10,\n      \"total\": 1,\n      \"totalPages\": 1,\n      \"hasNext\": false,\n      \"hasPrev\": false\n    }\n  }\n}"
+            },
+            {
+              "name": "Error 403 Forbidden",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/orders"}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Forbidden\",\n  \"message\": \"Anda tidak memiliki izin untuk mengakses resource ini\",\n  \"statusCode\": 403\n}"
+            }
+          ]
         },
         {
           "name": "Create Order",
@@ -789,9 +1055,61 @@
               "host": ["{{baseUrl}}"],
               "path": ["orders"]
             },
-            "description": "Create a new order (requires Admin/Sales role). Product stock will be reduced automatically."
+            "description": "Create a new order\n\n**Permission:** Admin/Sales only\n\n**Request Type:** `CreateOrderRequest`\n**Response Type:** `ApiResponse<Order>`\n\n**Note:** Product stock is automatically reduced when order is created.\n\n---\n\n**Success (201):**\n```json\n{\n  \"error\": null,\n  \"message\": \"Pesanan berhasil dibuat\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n    \"shop\": {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdee\",\n      \"name\": \"Jakarta Main Store\"\n    },\n    \"status\": \"PENDING\",\n    \"totalAmount\": 45000,\n    \"orderItems\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdf0\",\n        \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n        \"product\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n          \"name\": \"Organic Rice\",\n          \"price\": 15000\n        },\n        \"quantity\": 3,\n        \"price\": 15000\n      }\n    ],\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}\n```\n\n**Possible Errors:** 400, 401, 403, 404, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 201",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n  \"items\": [\n    {\n      \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n      \"quantity\": 3\n    }\n  ]\n}"
+                },
+                "url": {"raw": "{{baseUrl}}/orders"}
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Pesanan berhasil dibuat\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n    \"shop\": {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdee\",\n      \"name\": \"Jakarta Main Store\"\n    },\n    \"status\": \"PENDING\",\n    \"totalAmount\": 45000,\n    \"orderItems\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdf0\",\n        \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n        \"product\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n          \"name\": \"Organic Rice\",\n          \"price\": 15000\n        },\n        \"quantity\": 3,\n        \"price\": 15000\n      }\n    ],\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Error 404 Shop Not Found",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"shopId\": \"00000000-0000-0000-0000-000000000000\",\n  \"items\": []\n}"
+                },
+                "url": {"raw": "{{baseUrl}}/orders"}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Not Found\",\n  \"message\": \"Toko tidak ditemukan\",\n  \"statusCode\": 404\n}"
+            },
+            {
+              "name": "Error 400 Insufficient Stock",
+              "originalRequest": {
+                "method": "POST",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n  \"items\": [\n    {\n      \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n      \"quantity\": 999\n    }\n  ]\n}"
+                },
+                "url": {"raw": "{{baseUrl}}/orders"}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Bad Request\",\n  \"message\": \"Stok tidak mencukupi\",\n  \"statusCode\": 400\n}"
+            }
+          ]
         },
         {
           "name": "Get Order by ID",
@@ -810,9 +1128,36 @@
                 }
               ]
             },
-            "description": "Get a specific order with items and product details"
+            "description": "Get a specific order with items and product details\n\n**Permission:** Admin/Sales only\n\n**Response Type:** `ApiResponse<Order>`\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n    \"shop\": {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdee\",\n      \"name\": \"Jakarta Main Store\"\n    },\n    \"status\": \"PENDING\",\n    \"totalAmount\": 45000,\n    \"orderItems\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdf0\",\n        \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n        \"product\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n          \"name\": \"Organic Rice\",\n          \"price\": 15000\n        },\n        \"quantity\": 3,\n        \"price\": 15000\n      }\n    ],\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}\n```\n\n**Possible Errors:** 401, 403, 404, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/orders/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n    \"shop\": {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdee\",\n      \"name\": \"Jakarta Main Store\"\n    },\n    \"status\": \"PENDING\",\n    \"totalAmount\": 45000,\n    \"orderItems\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdf0\",\n        \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n        \"product\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n          \"name\": \"Organic Rice\",\n          \"price\": 15000\n        },\n        \"quantity\": 3,\n        \"price\": 15000\n      }\n    ],\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Error 404 Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/orders/00000000-0000-0000-0000-000000000000"}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Not Found\",\n  \"message\": \"Pesanan tidak ditemukan\",\n  \"statusCode\": 404\n}"
+            }
+          ]
         },
         {
           "name": "Update Order Status (PUT)",
@@ -840,9 +1185,38 @@
                 }
               ]
             },
-            "description": "Update order status (requires Admin/Sales role). Cancelling restores product stock."
+            "description": "Update order status\n\n**Permission:** Admin/Sales only\n\n**Request Type:** `UpdateOrderRequest`\n**Response Type:** `ApiResponse<Order>`\n\n**Note:** Cancelling (CANCELLED) restores product stock.\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"Status pesanan berhasil diperbarui\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n    \"shop\": {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdee\",\n      \"name\": \"Jakarta Main Store\"\n    },\n    \"status\": \"COMPLETED\",\n    \"totalAmount\": 45000,\n    \"orderItems\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdf0\",\n        \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n        \"product\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n          \"name\": \"Organic Rice\",\n          \"price\": 15000\n        },\n        \"quantity\": 3,\n        \"price\": 15000\n      }\n    ],\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T11:00:00.000Z\"\n  }\n}\n```\n\n**Possible Errors:** 400, 401, 403, 404, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\n  \"status\": \"COMPLETED\"\n}"},
+                "url": {"raw": "{{baseUrl}}/orders/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Status pesanan berhasil diperbarui\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n    \"shop\": {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdee\",\n      \"name\": \"Jakarta Main Store\"\n    },\n    \"status\": \"COMPLETED\",\n    \"totalAmount\": 45000,\n    \"orderItems\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdf0\",\n        \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n        \"product\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n          \"name\": \"Organic Rice\",\n          \"price\": 15000\n        },\n        \"quantity\": 3,\n        \"price\": 15000\n      }\n    ],\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T11:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Error 400 Invalid Status Transition",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\n  \"status\": \"PENDING\"\n}"},
+                "url": {"raw": "{{baseUrl}}/orders/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Bad Request\",\n  \"message\": \"Perubahan status tidak valid\",\n  \"statusCode\": 400\n}"
+            }
+          ]
         },
         {
           "name": "Update Order Status (PATCH)",
@@ -870,9 +1244,24 @@
                 }
               ]
             },
-            "description": "Partial update of order status (requires Admin/Sales role)"
+            "description": "Partial update of order status\n\n**Permission:** Admin/Sales only\n\n**Response Type:** `ApiResponse<Order>`\n\n---\n\n**Success (200):** Same as PUT\n\n**Possible Errors:** 400, 401, 403, 404, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [{"key": "Content-Type", "value": "application/json"}],
+                "body": {"mode": "raw", "raw": "{\n  \"status\": \"CANCELLED\"\n}"},
+                "url": {"raw": "{{baseUrl}}/orders/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Status pesanan berhasil diperbarui\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n    \"shop\": {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdee\",\n      \"name\": \"Jakarta Main Store\"\n    },\n    \"status\": \"CANCELLED\",\n    \"totalAmount\": 45000,\n    \"orderItems\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdf0\",\n        \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n        \"product\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n          \"name\": \"Organic Rice\",\n          \"price\": 15000\n        },\n        \"quantity\": 3,\n        \"price\": 15000\n      }\n    ],\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T11:00:00.000Z\"\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Delete Order",
@@ -891,9 +1280,36 @@
                 }
               ]
             },
-            "description": "Delete a pending order and restore product stock (requires Admin/Sales role). Only pending orders can be deleted."
+            "description": "Delete a pending order\n\n**Permission:** Admin/Sales only\n\n**Response Type:** `ApiResponse<Order>`\n\n**Note:** Only pending orders can be deleted. Stock is restored when deleted.\n\n---\n\n**Success (200):**\n```json\n{\n  \"error\": null,\n  \"message\": \"Pesanan berhasil dihapus\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n    \"shop\": {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdee\",\n      \"name\": \"Jakarta Main Store\"\n    },\n    \"status\": \"PENDING\",\n    \"totalAmount\": 45000,\n    \"orderItems\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdf0\",\n        \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n        \"product\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n          \"name\": \"Organic Rice\",\n          \"price\": 15000\n        },\n        \"quantity\": 3,\n        \"price\": 15000\n      }\n    ],\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}\n```\n\n**Possible Errors:** 400, 401, 403, 404, 500"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success 200",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/orders/01234567-89ab-cdef-0123-456789abcdef"}
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Pesanan berhasil dihapus\",\n  \"data\": {\n    \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n    \"shopId\": \"01234567-89ab-cdef-0123-456789abcdee\",\n    \"shop\": {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdee\",\n      \"name\": \"Jakarta Main Store\"\n    },\n    \"status\": \"PENDING\",\n    \"totalAmount\": 45000,\n    \"orderItems\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdf0\",\n        \"productId\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n        \"product\": {\n          \"id\": \"01234567-89ab-cdef-0123-456789abcdf1\",\n          \"name\": \"Organic Rice\",\n          \"price\": 15000\n        },\n        \"quantity\": 3,\n        \"price\": 15000\n      }\n    ],\n    \"createdAt\": \"2024-01-15T10:00:00.000Z\",\n    \"updatedAt\": \"2024-01-15T10:00:00.000Z\"\n  }\n}"
+            },
+            {
+              "name": "Error 400 Cannot Delete Completed",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {"raw": "{{baseUrl}}/orders/completed-order-id"}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [{"key": "Content-Type", "value": "application/json"}],
+              "body": "{\n  \"error\": \"Bad Request\",\n  \"message\": \"Hanya pesanan dengan status PENDING yang dapat dihapus\",\n  \"statusCode\": 400\n}"
+            }
+          ]
         }
       ],
       "description": "Order management endpoints (Admin/Sales only)"
