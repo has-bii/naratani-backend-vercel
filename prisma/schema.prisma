@@ -120,6 +120,8 @@ model Product {
 
   @@unique([slug])
   @@index([categoryId])
+  @@index([name])  // Index for name search
+  @@index([slug])  // Index for slug lookups
   @@map("product")
 }
 
@@ -144,6 +146,9 @@ model Order {
   @@index([shopId])
   @@index([status])
   @@index([createdBy])
+  @@index([status, shopId])  // Composite for status + shop queries
+  @@index([createdBy, status])  // Composite for sales + status queries
+  @@index([shopId, status])  // Composite for shop + status queries
   @@map("order")
 }
 
