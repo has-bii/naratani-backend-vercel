@@ -11,14 +11,16 @@ import { createOrderSchema, getOrderQuerySchema } from "@/validations/order.vali
 
 export async function GET(request: Request) {
   try {
-    await requirePermission({ order: ["read"] })
+    const session = await requirePermission({ order: ["read"] })
 
     const query = getOrderQuerySchema.parse(Object.fromEntries(new URL(request.url).searchParams))
     const { page, limit, sortBy, sortOrder, status, shopId } = query
 
+    // Sales can only see orders they created, admin can see all orders
     const where = {
       ...(status && { status }),
       ...(shopId && { shopId }),
+      ...(session.user.role === "sales" && { createdBy: session.user.id }),
     }
 
     const [orders, total] = await Promise.all([
@@ -31,12 +33,8 @@ export async function GET(request: Request) {
           shop: {
             select: { id: true, name: true },
           },
-          orderItems: {
-            include: {
-              product: {
-                select: { id: true, name: true, price: true },
-              },
-            },
+          creator: {
+            select: { id: true, name: true, email: true, role: true },
           },
         },
       }),
@@ -54,7 +52,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    await requirePermission({ order: ["create"] })
+    const session = await requirePermission({ order: ["create"] })
 
     const body = await request.json()
     const { shopId, items } = createOrderSchema.parse(body)
@@ -86,16 +84,23 @@ export async function POST(request: Request) {
       }
     }
 
-    // Calculate total amount
+    // Calculate total amount using custom price if provided, otherwise product price
     let totalAmount = 0
     const orderItemsData = items.map((item) => {
       const product = products.find((p) => p.id === item.productId)!
-      const itemTotal = product.price * item.quantity
+      const price = item.unitPrice ?? product.price
+      const itemTotal = price * item.quantity
       totalAmount += itemTotal
+      // Auto-generate description when custom price is used
+      const hasCustomPrice = item.unitPrice !== undefined && item.unitPrice !== product.price
+      const description = hasCustomPrice
+        ? `Harga kustom (harga asli: Rp ${product.price.toLocaleString("id-ID")})`
+        : null
       return {
         productId: item.productId,
         quantity: item.quantity,
-        price: product.price,
+        price,
+        description,
       }
     })
 
@@ -107,6 +112,7 @@ export async function POST(request: Request) {
           shopId,
           status: "PENDING",
           totalAmount,
+          createdBy: session.user.id,
           orderItems: {
             create: orderItemsData,
           },
@@ -114,6 +120,9 @@ export async function POST(request: Request) {
         include: {
           shop: {
             select: { id: true, name: true },
+          },
+          creator: {
+            select: { id: true, name: true, email: true, role: true },
           },
           orderItems: {
             include: {

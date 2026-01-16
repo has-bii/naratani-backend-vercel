@@ -10,6 +10,9 @@ async function findOrder(id: string) {
       shop: {
         select: { id: true, name: true },
       },
+      creator: {
+        select: { id: true, name: true, email: true, role: true },
+      },
       orderItems: {
         include: {
           product: {
@@ -85,6 +88,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       include: {
         shop: {
           select: { id: true, name: true },
+        },
+        creator: {
+          select: { id: true, name: true, email: true, role: true },
         },
         orderItems: {
           include: {

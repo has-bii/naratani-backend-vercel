@@ -3,6 +3,7 @@ import z from "zod"
 export const orderItemSchema = z.object({
   productId: z.uuid("ID produk tidak valid"),
   quantity: z.int().positive("Jumlah harus lebih dari 0"),
+  unitPrice: z.int().positive("Harga satuan harus lebih dari 0").optional(),
 })
 
 export const createOrderSchema = z.object({

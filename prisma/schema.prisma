@@ -25,6 +25,7 @@ model User {
   phoneNumberVerified Boolean?
   sessions            Session[]
   accounts            Account[]
+  orders              Order[]
 
   role       UserRole  @default(user)
   banned     Boolean?  @default(false)
@@ -134,23 +135,27 @@ model Order {
   shop        Shop        @relation(fields: [shopId], references: [id], onDelete: Restrict)
   status      OrderStatus @default(PENDING)
   totalAmount Int
+  createdBy   String?     @db.Uuid
+  creator     User?       @relation(fields: [createdBy], references: [id], onDelete: SetNull)
   orderItems  OrderItem[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
   @@index([shopId])
   @@index([status])
+  @@index([createdBy])
   @@map("order")
 }
 
 model OrderItem {
-  id        String   @id @default(uuid(7)) @db.Uuid
-  orderId   String   @db.Uuid
-  productId String   @db.Uuid
-  quantity  Int
-  price     Int
-  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  id          String   @id @default(uuid(7)) @db.Uuid
+  orderId     String   @db.Uuid
+  productId   String   @db.Uuid
+  quantity    Int
+  price       Int
+  description String?
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
 
   @@index([orderId])
   @@index([productId])
