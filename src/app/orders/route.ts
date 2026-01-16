@@ -134,17 +134,19 @@ export async function POST(request: Request) {
         },
       })
 
-      // Update product stock
-      for (const item of items) {
-        await tx.product.update({
-          where: { id: item.productId },
-          data: {
-            stock: {
-              decrement: item.quantity,
+      // Update product stock in parallel (fixes N+1 query issue)
+      await Promise.all(
+        items.map((item) =>
+          tx.product.update({
+            where: { id: item.productId },
+            data: {
+              stock: {
+                decrement: item.quantity,
+              },
             },
-          },
-        })
-      }
+          })
+        )
+      )
 
       return order
     })

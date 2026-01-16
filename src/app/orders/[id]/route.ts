@@ -55,30 +55,50 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     // Handle status changes that affect stock
     if (validatedData.status === "CANCELLED" && existingOrder.status !== "CANCELLED") {
-      // Restore stock when order is cancelled
-      await prisma.$transaction(async (tx) => {
+      // Restore stock when order is cancelled and return updated order in same transaction
+      const result = await prisma.$transaction(async (tx) => {
         // Update order status
         await tx.order.update({
           where: { id },
           data: validatedData,
         })
 
-        // Restore product stock
-        for (const item of existingOrder.orderItems) {
-          await tx.product.update({
-            where: { id: item.productId },
-            data: {
-              stock: {
-                increment: item.quantity,
+        // Restore product stock in parallel (fixes N+1 query issue)
+        await Promise.all(
+          existingOrder.orderItems.map((item) =>
+            tx.product.update({
+              where: { id: item.productId },
+              data: {
+                stock: {
+                  increment: item.quantity,
+                },
+              },
+            })
+          )
+        )
+
+        // Return updated order within transaction (fixes redundant query)
+        return tx.order.findUnique({
+          where: { id },
+          include: {
+            shop: {
+              select: { id: true, name: true },
+            },
+            creator: {
+              select: { id: true, name: true, email: true, role: true },
+            },
+            orderItems: {
+              include: {
+                product: {
+                  select: { id: true, name: true, price: true },
+                },
               },
             },
-          })
-        }
+          },
+        })
       })
 
-      // Fetch updated order
-      const order = await findOrder(id)
-      return successResponse(order, "Status pesanan berhasil diperbarui")
+      return successResponse(result, "Status pesanan berhasil diperbarui")
     }
 
     // For other status updates or no status change
@@ -131,17 +151,19 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
         where: { id },
       })
 
-      // Restore product stock
-      for (const item of existingOrder.orderItems) {
-        await tx.product.update({
-          where: { id: item.productId },
-          data: {
-            stock: {
-              increment: item.quantity,
+      // Restore product stock in parallel (fixes N+1 query issue)
+      await Promise.all(
+        existingOrder.orderItems.map((item) =>
+          tx.product.update({
+            where: { id: item.productId },
+            data: {
+              stock: {
+                increment: item.quantity,
+              },
             },
-          },
-        })
-      }
+          })
+        )
+      )
     })
 
     return successResponse(null, "Pesanan berhasil dihapus")
