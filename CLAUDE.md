@@ -317,3 +317,47 @@ This repository uses conventional commits. When using `/commit`:
 - Format: `type(scope): description`
 - Types: feat, fix, chore, docs, refactor, style, test, perf, ci
 - Examples: `feat(auth): add OAuth login`, `fix(api): resolve race condition`
+
+## Custom Agents
+
+This project uses custom specialist agents defined in `.claude/agents/` to handle different aspects of development.
+
+### Project Manager Agent
+
+**Location**: `.claude/agents/project-manager.md`
+
+**When to use**: For complex, multi-disciplinary features that require coordination across multiple specialists.
+
+**How it works**:
+1. Analyzes requirements and breaks them down
+2. Identifies which specialist agents are needed
+3. Delegates tasks to appropriate specialists
+4. Compiles 2-3 implementation options with pros/cons
+5. Presents options for approval before implementation
+
+**Available specialists**:
+- **Backend Logic Engineer** (`backend-logic-engineer.md`): Business logic, workflows, order processing, validations
+- **Database Engineer** (`database-engineer.md`): Schema design, Prisma models, migrations, query optimization
+- **API Integration Engineer** (`api-integration-engineer.md`): External APIs, webhooks, third-party integrations
+- **Security & Auth Engineer** (`security-auth-engineer.md`): Authentication, authorization, permissions, security
+
+**Launch example**:
+```bash
+# Launch the Project Manager agent for a new feature
+# It will coordinate the appropriate specialists
+```
+
+### Using Specialist Agents Directly
+
+For focused tasks within a single domain, you can launch specialist agents directly:
+
+| Agent | Use Case |
+|-------|----------|
+| Backend Logic Engineer | New endpoints, business rules, workflows |
+| Database Engineer | Schema changes, migrations, query optimization |
+| API Integration Engineer | Payment gateways, shipping APIs, webhooks |
+| Security & Auth Engineer | Auth flows, RBAC, security middleware |
+
+**When to use Project Manager vs. Direct Specialist**:
+- **Use Project Manager**: Complex features touching multiple domains (e.g., "add payment processing with webhooks")
+- **Use Direct Specialist**: Focused tasks within one domain (e.g., "add a new API endpoint for products")
