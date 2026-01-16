@@ -22,8 +22,8 @@ export async function GET(request: Request) {
       ...(category && { categoryId: category }),
       ...(search && {
         OR: [
-          { name: { contains: search, mode: "insensitive" as const } },
-          { slug: { contains: search, mode: "insensitive" as const } },
+          { name: { startsWith: search, mode: "insensitive" as const } },  // Uses index
+          { slug: slugify(search) },  // Exact match on indexed slug
         ],
       }),
       ...(minPrice !== undefined || maxPrice !== undefined
