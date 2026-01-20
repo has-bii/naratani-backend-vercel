@@ -69,7 +69,18 @@ src/
 │   │   └── [id]/route.ts              # Shop by ID (GET, PATCH, DELETE)
 │   ├── orders/
 │   │   ├── route.ts                   # Order CRUD (GET, POST)
-│   │   └── [id]/route.ts              # Order by ID (GET, PUT, DELETE)
+│   │   └── [id]/
+│   │       ├── route.ts               # Get order by ID (GET)
+│   │       ├── accept/route.ts        # Accept order → PROCESSING (PUT)
+│   │       ├── cancel/route.ts        # Cancel order → CANCELLED (PUT)
+│   │       └── complete/route.ts      # Complete order → COMPLETED (PUT)
+│   ├── suppliers/
+│   │   ├── route.ts                   # Supplier CRUD (GET, POST)
+│   │   └── [id]/route.ts              # Supplier by ID (GET, PUT, DELETE)
+│   └── stock-entries/
+│       ├── route.ts                   # Stock Entry list/create (GET, POST)
+│       ├── [id]/route.ts              # Delete Stock Entry (DELETE)
+│       └── product/[productId]/route.ts # Get Stock Entries by Product (GET)
 │   └── generated/prisma/              # Auto-generated Prisma client
 │
 ├── lib/
@@ -88,7 +99,9 @@ src/
     ├── product.validation.ts          # Product-related Zod schemas
     ├── category.validation.ts         # Category-related Zod schemas
     ├── shop.validation.ts             # Shop-related Zod schemas
-    └── order.validation.ts            # Order-related Zod schemas
+    ├── order.validation.ts            # Order-related Zod schemas
+    ├── supplier.validation.ts         # Supplier-related Zod schemas
+    └── stock-entry.validation.ts      # Stock Entry-related Zod schemas
 
 prisma/
 ├── schema.prisma                      # Database schema definition
@@ -128,18 +141,59 @@ Core models (defined in `prisma/schema.prisma`):
 - **Verification**: Email/phone verification tokens
 - **Shop**: Shop entities
 - **ProductCategory**: Categorization for products
-- **Product**: Products with slug, price, stock, category relation
+- **Product**: Products with slug, price, stock, reservedStock, category relation
+- **Supplier**: Product suppliers (name, email, phone, address)
+- **StockEntry**: Stock purchases from suppliers with quantity, unitCost, remainingQty, purchaseDate
 - **Order**: Orders with shop, status, total amount
-- **OrderItem**: Order items with product, quantity, price (stock tracked)
+- **OrderItem**: Order items with product, quantity, price, margin tracking (totalCost, totalMargin, avgMarginRate)
+- **OrderItemStockEntry**: Join table tracking which stock entries were used for each order item, with per-allocation margin calculations
 
 All tables use `uuid(7)` for IDs and are mapped to lowercase snake_case names.
 
 ### Order Statuses
 
-Orders support three statuses:
-- `PENDING` - Initial state, can be modified or deleted
-- `COMPLETED` - Order fulfilled, cannot be deleted
-- `CANCELLED` - Order cancelled, stock is restored
+Orders support four statuses:
+- `PENDING` - Initial state, stock reserved but not yet allocated
+- `PROCESSING` - Order accepted, stock allocated from specific suppliers, stock entries deducted
+- `COMPLETED` - Order fulfilled
+- `CANCELLED` - Order cancelled, stock restored (can cancel from PENDING or PROCESSING)
+
+### Stock Management System
+
+**Product Stock Levels:**
+- `stock` - Actual available stock (already excludes reserved quantities)
+- `reservedStock` - Stock held for pending/processing orders
+
+**Stock Entry Tracking:**
+- `StockEntry` tracks purchases from suppliers with `remainingQty` for FIFO allocation
+- When an order is accepted, admin manually allocates which stock entries to use
+- `OrderItemStockEntry` tracks which stock entries were used for each order item
+
+**Stock Flow:**
+
+| Stage | Product.stock | Product.reservedStock | StockEntry.remainingQty |
+|-------|---------------|----------------------|-------------------------|
+| Create Order | `-` | `+` | (unchanged) |
+| Accept Order | (no change) | `-` | `-` |
+| Cancel (PENDING) | `+` | `-` | (unchanged) |
+| Cancel (PROCESSING) | `+` | (no change) | `+` |
+| Complete Order | (no change) | (no change) | (unchanged) |
+
+**Frontend Benefit:** `Product.stock` directly shows available stock - no calculation needed.
+
+### Margin Tracking
+
+When an order is accepted:
+1. Admin allocates stock from specific `StockEntry` records
+2. `OrderItemStockEntry` records are created with per-allocation margin data:
+   - `unitCost` - Cost from stock entry
+   - `unitPrice` - Selling price from order item
+   - `marginAmount` - (unitPrice - unitCost) × quantity
+   - `marginRate` - ((unitPrice - unitCost) / unitPrice) × 100
+3. `OrderItem` gets aggregated totals:
+   - `totalCost` - Sum of all allocation costs
+   - `totalMargin` - Sum of all margin amounts
+   - `avgMarginRate` - Weighted average margin rate
 
 ## API Response Conventions
 
@@ -244,24 +298,33 @@ All exceptions have a `.toResponse()` method that returns a `NextResponse`.
 
 Defined in `src/lib/permissions.ts`:
 
-| Role | Product | Category | Shop | Order |
-|------|---------|----------|-------|-------|
-| Admin | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete |
-| User | read | read | read | - |
-| Sales | read | read | read | create, read, update, delete |
+| Role | Product | Category | Shop | Order | Supplier | StockEntry |
+|------|---------|----------|-------|-------|----------|------------|
+| Admin | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, delete |
+| User | read | read | read | - | - | - |
+| Sales | read | read | read | create, read, update, delete | read | read |
 
 Use `requirePermission({ resource: ["action"] })` in route handlers to enforce permissions.
 
-### Stock Management
+### Order Endpoints
 
-When creating an order:
-- Product stock is automatically reduced by the ordered quantity
-- Total amount is calculated based on current product prices
-- Transaction ensures stock is only deducted if order creation succeeds
+**List & Create:**
+- `GET /orders` - List all orders with pagination, filters (status, shopId)
+- `POST /orders` - Create new PENDING order (reserves stock, checks availability)
 
-When cancelling an order:
-- Product stock is automatically restored to the original quantity
-- Transaction ensures stock is only restored if status update succeeds
+**Order Details:**
+- `GET /orders/:id` - Get order by ID with items and margin data
+
+**Order Status Changes:**
+- `PUT /orders/:id/accept` - Accept PENDING order → PROCESSING
+  - Allocates stock from specific StockEntry records (manual selection)
+  - Creates OrderItemStockEntry records with margin calculations
+  - Deducts from Product.reservedStock and StockEntry.remainingQty
+- `PUT /orders/:id/complete` - Complete PROCESSING order → COMPLETED
+  - No stock changes (already done during accept)
+- `PUT /orders/:id/cancel` - Cancel order → CANCELLED
+  - If PENDING: restores Product.stock, releases Product.reservedStock
+  - If PROCESSING: restores Product.stock and StockEntry.remainingQty
 
 ## Adding New Features
 
