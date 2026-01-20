@@ -107,16 +107,18 @@ model ProductCategory {
 }
 
 model Product {
-  id          String           @id @default(uuid(7)) @db.Uuid
-  name        String
-  slug        String
-  price       Int              @default(0)
-  stock       Int              @default(0)
-  categoryId  String?          @db.Uuid
-  category    ProductCategory? @relation(references: [id], fields: [categoryId], onUpdate: Cascade, onDelete: SetNull)
-  orderItems  OrderItem[]
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  id            String           @id @default(uuid(7)) @db.Uuid
+  name          String
+  slug          String
+  price         Int              @default(0)
+  stock         Int              @default(0)         // Actual available stock
+  reservedStock Int              @default(0)         // Stock reserved for pending orders
+  categoryId    String?          @db.Uuid
+  category      ProductCategory? @relation(references: [id], fields: [categoryId], onUpdate: Cascade, onDelete: SetNull)
+  orderItems    OrderItem[]
+  stockEntries  StockEntry[]     // NEW: Relation to stock entries
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
 
   @@unique([slug])
   @@index([categoryId])
@@ -127,6 +129,7 @@ model Product {
 
 enum OrderStatus {
   PENDING
+  PROCESSING
   COMPLETED
   CANCELLED
 }
@@ -157,12 +160,75 @@ model OrderItem {
   orderId     String   @db.Uuid
   productId   String   @db.Uuid
   quantity    Int
-  price       Int
+  price       Int      // Selling price per unit
   description String?
-  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product     Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  // Cost tracking
+  totalCost     Int?   // Sum of all (unitCost × quantity) from allocations
+  totalMargin   Int?   // Sum of all marginAmount from allocations
+  avgMarginRate Float? // Average margin rate from allocations
+
+  order               Order                   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product             Product                 @relation(fields: [productId], references: [id], onDelete: Restrict)
+  stockEntryAllocations OrderItemStockEntry[] // NEW: Which stock entries were used
 
   @@index([orderId])
   @@index([productId])
   @@map("order_item")
+}
+
+// NEW: Supplier model
+model Supplier {
+  id        String      @id @default(uuid(7)) @db.Uuid
+  name      String      @unique
+  email     String?
+  phone     String?
+  address   String?
+  stockEntries StockEntry[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@map("supplier")
+}
+
+// NEW: StockEntry model - track purchases from suppliers
+model StockEntry {
+  id           String   @id @default(uuid(7)) @db.Uuid
+  productId    String   @db.Uuid
+  supplierId   String   @db.Uuid
+  quantity     Int      // Quantity purchased
+  unitCost     Int      // Cost per unit
+  totalCost    Int      // quantity × unitCost
+  remainingQty Int      // How much left in stock
+  purchaseDate DateTime @default(now())
+  notes        String?
+
+  product     Product                  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  supplier    Supplier                 @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  allocations OrderItemStockEntry[]    // Which order items used this stock
+
+  @@index([productId])
+  @@index([remainingQty])  // For finding available stock
+  @@map("stock_entry")
+}
+
+// NEW: OrderItemStockEntry - track which stock entries were used for each order item
+model OrderItemStockEntry {
+  id           String   @id @default(uuid(7)) @db.Uuid
+  orderItemId  String   @db.Uuid
+  stockEntryId String   @db.Uuid
+  quantity     Int      // How many units from this stock entry
+  unitCost     Int      // Cost per unit (copied for historical accuracy)
+  unitPrice    Int      // Selling price per unit (copied from OrderItem)
+
+  // Margin tracking per allocation
+  marginAmount Int      // (unitPrice - unitCost) × quantity
+  marginRate   Float    // ((unitPrice - unitCost) / unitPrice) × 100
+
+  orderItem   OrderItem   @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  stockEntry  StockEntry  @relation(fields: [stockEntryId], references: [id], onDelete: Restrict)
+
+  @@index([orderItemId])
+  @@index([stockEntryId])
+  @@map("order_item_stock_entry")
 }
