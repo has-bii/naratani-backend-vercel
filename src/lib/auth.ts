@@ -24,7 +24,7 @@ export const auth = betterAuth({
   },
   plugins: [
     openAPI(),
-    // expo(),
+    expo(),
     admin({
       ac,
       defaultRole: "user",
