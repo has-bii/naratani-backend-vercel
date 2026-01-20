@@ -5,7 +5,7 @@ import {
   requirePermission,
   successResponse,
 } from "@/lib/api-utils"
-import { BadRequestException, ConflictException } from "@/lib/exceptions"
+import { BadRequestException } from "@/lib/exceptions"
 import prisma from "@/lib/prisma"
 import { createOrderSchema, getOrderQuerySchema } from "@/validations/order.validation"
 
@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     const where = {
       ...(status && { status }),
       ...(shopId && { shopId }),
-      ...(session.user.role === "sales" && { createdBy: session.user.id }),
+      ...(session.user.role !== "sales" && { createdBy: session.user.id }),
     }
 
     const [orders, total] = await Promise.all([
@@ -144,8 +144,8 @@ export async function POST(request: Request) {
                 decrement: item.quantity,
               },
             },
-          })
-        )
+          }),
+        ),
       )
 
       return order

@@ -24,6 +24,9 @@ export async function GET(request: Request) {
 
     const categories = await prisma.productCategory.findMany({
       where,
+      orderBy: {
+        name: "asc",
+      },
       ...(includeCount && {
         include: {
           _count: {

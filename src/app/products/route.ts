@@ -22,8 +22,8 @@ export async function GET(request: Request) {
       ...(category && { categoryId: category }),
       ...(search && {
         OR: [
-          { name: { startsWith: search, mode: "insensitive" as const } },  // Uses index
-          { slug: slugify(search) },  // Exact match on indexed slug
+          { name: { startsWith: search, mode: "insensitive" as const } }, // Uses index
+          { slug: slugify(search) }, // Exact match on indexed slug
         ],
       }),
       ...(minPrice !== undefined || maxPrice !== undefined
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
     return createdResponse(product, "Produk berhasil dibuat")
   } catch (error) {
     if (error instanceof Error && "code" in error && error.code === "P2002") {
-      return new ConflictException("Produk dengan slug ini sudah ada").toResponse()
+      return new ConflictException("Produk dengan nama ini sudah ada").toResponse()
     }
     return handleApiError(error, "POST /products")
   }
