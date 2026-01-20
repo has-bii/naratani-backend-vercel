@@ -79,8 +79,11 @@ export async function POST(request: Request) {
     // Check stock availability
     for (const item of items) {
       const product = products.find((p) => p.id === item.productId)
-      if (!product || product.stock < item.quantity) {
-        return new BadRequestException(`Stok ${product?.name} tidak mencukupi`).toResponse()
+      if (!product) {
+        return new BadRequestException("Produk tidak ditemukan").toResponse()
+      }
+      if (product.stock < item.quantity) {
+        return new BadRequestException(`Stok ${product.name} tidak mencukupi`).toResponse()
       }
     }
 
@@ -104,7 +107,7 @@ export async function POST(request: Request) {
       }
     })
 
-    // Create order with items and update stock in a transaction
+    // Create order with items and reserve stock in a transaction
     const result = await prisma.$transaction(async (tx) => {
       // Create order with order items
       const order = await tx.order.create({
@@ -134,7 +137,7 @@ export async function POST(request: Request) {
         },
       })
 
-      // Update product stock in parallel (fixes N+1 query issue)
+      // Reserve product stock in parallel
       await Promise.all(
         items.map((item) =>
           tx.product.update({
@@ -142,6 +145,9 @@ export async function POST(request: Request) {
             data: {
               stock: {
                 decrement: item.quantity,
+              },
+              reservedStock: {
+                increment: item.quantity,
               },
             },
           }),
