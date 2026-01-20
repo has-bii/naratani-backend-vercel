@@ -13,9 +13,6 @@ const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
     adapter,
-    // Serverless optimizations
-    log: process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
-    errorFormat: "minimal",
   })
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma

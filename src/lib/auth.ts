@@ -18,10 +18,13 @@ export const auth = betterAuth({
       verify: verifyPassword,
     },
     requireEmailVerification: false,
+    sendResetPassword: async (data, request) => {
+      console.log(`Requesting reset password for ${data.user.email}: ${data.token}`)
+    },
   },
   plugins: [
     openAPI(),
-    expo(),
+    // expo(),
     admin({
       ac,
       defaultRole: "user",
