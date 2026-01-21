@@ -8,6 +8,7 @@ export const statement = {
   shop: ["create", "read", "update", "delete"] as const,
   order: ["create", "read", "update", "delete"] as const,
   supplier: ["create", "read", "update", "delete"] as const,
+  dashboard: ["read", "revalidate"] as const,
 } as const
 
 export const ac = createAccessControl(statement)
@@ -19,6 +20,7 @@ export const admin = ac.newRole({
   shop: ["create", "read", "update", "delete"],
   order: ["create", "read", "update", "delete"],
   supplier: ["create", "read", "update", "delete"],
+  dashboard: ["read", "revalidate"],
 })
 
 export const user = ac.newRole({
@@ -31,5 +33,5 @@ export const sales = ac.newRole({
   product: ["read"],
   category: ["read"],
   shop: ["read"],
-  order: ["create", "read", "update", "delete"],
+  order: ["create", "read"],
 })

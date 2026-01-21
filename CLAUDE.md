@@ -81,6 +81,14 @@ src/
 │       ├── route.ts                   # Stock Entry list/create (GET, POST)
 │       ├── [id]/route.ts              # Delete Stock Entry (DELETE)
 │       └── product/[productId]/route.ts # Get Stock Entries by Product (GET)
+│   └── dashboard/
+│       ├── user/route.ts              # Total users count (GET)
+│       ├── sales/route.ts             # Sales revenue + order count (GET)
+│       ├── orders/route.ts            # Order count by status (GET)
+│       ├── gross-profit/route.ts      # Margin breakdown (GET)
+│       ├── total-avg-margin/route.ts  # Weighted average margin rate (GET)
+│       ├── shops/route.ts             # Shops ranked by revenue (GET)
+│       └── product-left-value/route.ts # Current stock value (GET)
 │   └── generated/prisma/              # Auto-generated Prisma client
 │
 ├── lib/
@@ -101,7 +109,8 @@ src/
     ├── shop.validation.ts             # Shop-related Zod schemas
     ├── order.validation.ts            # Order-related Zod schemas
     ├── supplier.validation.ts         # Supplier-related Zod schemas
-    └── stock-entry.validation.ts      # Stock Entry-related Zod schemas
+    ├── stock-entry.validation.ts      # Stock Entry-related Zod schemas
+    └── dashboard.validation.ts        # Dashboard period filter schemas
 
 prisma/
 ├── schema.prisma                      # Database schema definition
@@ -298,11 +307,11 @@ All exceptions have a `.toResponse()` method that returns a `NextResponse`.
 
 Defined in `src/lib/permissions.ts`:
 
-| Role | Product | Category | Shop | Order | Supplier | StockEntry |
-|------|---------|----------|-------|-------|----------|------------|
-| Admin | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, delete |
-| User | read | read | read | - | - | - |
-| Sales | read | read | read | create, read, update, delete | read | read |
+| Role | Product | Category | Shop | Order | Supplier | StockEntry | Dashboard |
+|------|---------|----------|-------|-------|----------|------------|-----------|
+| Admin | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, delete | read, revalidate |
+| User | read | read | read | - | - | - | - |
+| Sales | read | read | read | create, read, update, delete | read | read | - |
 
 Use `requirePermission({ resource: ["action"] })` in route handlers to enforce permissions.
 
@@ -325,6 +334,46 @@ Use `requirePermission({ resource: ["action"] })` in route handlers to enforce p
 - `PUT /orders/:id/cancel` - Cancel order → CANCELLED
   - If PENDING: restores Product.stock, releases Product.reservedStock
   - If PROCESSING: restores Product.stock and StockEntry.remainingQty
+
+### Dashboard Endpoints
+
+**Admin-only endpoints** for analytics and reporting. All endpoints support period filtering via query parameters:
+
+**Period Filter Parameters:**
+- `period=daily` - Filter by specific day. Optional: `date=YYYY-MM-DD` (defaults to today)
+- `period=monthly` - Filter by month. Optional: `month=1-12&year=YYYY` (defaults to current month)
+- `period=yearly` - Filter by year. Optional: `year=YYYY` (defaults to current year)
+
+**Available Endpoints:**
+- `GET /dashboard/user` - Total users created in period
+  - Response: `{ totalUsers: number }`
+
+- `GET /dashboard/sales` - Sales revenue and order count
+  - Response: `{ totalRevenue: number, orderCount: number }`
+  - Only includes COMPLETED orders
+
+- `GET /dashboard/orders` - Order count by status
+  - Response: `{ PENDING: number, PROCESSING: number, COMPLETED: number, CANCELLED: number }`
+
+- `GET /dashboard/gross-profit` - Margin breakdown
+  - Response: `{ totalCost: number, totalRevenue: number, totalMargin: number, profitPercentage: number }`
+  - Only includes PROCESSING and COMPLETED orders
+
+- `GET /dashboard/total-avg-margin` - Weighted average margin rate
+  - Response: `{ avgMarginRate: number }`
+  - Calculated as: (totalMargin / totalRevenue) × 100
+
+- `GET /dashboard/shops` - Shops ranked by revenue
+  - Response: Array of `{ id, name, createdAt, orderCount, totalRevenue }`
+  - Sorted by totalRevenue descending
+
+- `GET /dashboard/product-left-value` - Current stock value
+  - Response: `{ totalStockValue: number, products: [...] }`
+  - Not period-filtered (shows current state)
+
+- `POST /dashboard/revalidate` - Revalidate all dashboard cache
+  - Response: `{ revalidated: true }`
+  - Admin-only, clears all dashboard cache tags for fresh data
 
 ## Adding New Features
 

@@ -1,0 +1,522 @@
+{
+  "info": {
+    "name": "Dashboard Analytics",
+    "description": "Dashboard endpoints for Naratani Backend - Admin-only analytics and reporting\n\n---\n\n## Overview\n\nAll dashboard endpoints require **Admin role** and support period-based filtering.\n\n---\n\n## Period Filtering\n\nAll dashboard endpoints (except `product-left-value`) support period filtering via query parameters:\n\n| Period | Query Parameters | Description |\n|--------|-----------------|-------------|\n| Daily | `period=daily&date=2025-01-21` | Filter by specific day (defaults to today) |\n| Monthly | `period=monthly&month=1&year=2025` | Filter by month (defaults to current month) |\n| Yearly | `period=yearly&year=2025` | Filter by year (defaults to current year) |\n\n---\n\n## Endpoints\n\n| Endpoint | Description | Response |\n|----------|-------------|----------|\n| `GET /dashboard/user` | Total users created in period | `{ totalUsers }` |\n| `GET /dashboard/sales` | Sales revenue + order count | `{ totalRevenue, orderCount }` |\n| `GET /dashboard/orders` | Order count by status | `{ PENDING, PROCESSING, COMPLETED, CANCELLED }` |\n| `GET /dashboard/gross-profit` | Margin breakdown | `{ totalCost, totalRevenue, totalMargin, profitPercentage }` |\n| `GET /dashboard/total-avg-margin` | Weighted average margin rate | `{ avgMarginRate }` |\n| `GET /dashboard/shops` | Shops ranked by revenue | Array of shops with order counts |\n| `GET /dashboard/product-left-value` | Current stock value | `{ totalStockValue, products }` |\n| `POST /dashboard/revalidate` | Revalidate all dashboard cache | `{ revalidated }` |\n\n---\n\n## Response Format\n\n```typescript\ninterface ApiResponse<T> {\n  error: string | null;\n  message: string;\n  data: T;\n}\n```\n\n---\n\n## Example Response (/dashboard/user)\n\n```json\n{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"totalUsers\": 150\n  }\n}\n```",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "sessionToken",
+      "value": "",
+      "type": "string",
+      "description": "Admin session token from /api/auth/sign-in"
+    }
+  ],
+  "auth": {
+    "type": "cookie",
+    "cookie": [
+      {
+        "key": "better-auth.session_token",
+        "value": "{{sessionToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "User Metrics",
+      "item": [
+        {
+          "name": "Get User Count - Daily",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/user?period=daily&date=2025-01-21",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "user"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "daily",
+                  "description": "Period: daily|monthly|yearly"
+                },
+                {
+                  "key": "date",
+                  "value": "2025-01-21",
+                  "description": "Date for daily filter (YYYY-MM-DD), defaults to today"
+                }
+              ]
+            },
+            "description": "Get total users created on a specific day"
+          },
+          "response": [
+            {
+              "name": "Example Response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/dashboard/user?period=daily",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["dashboard", "user"],
+                  "query": [
+                    { "key": "period", "value": "daily" }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"totalUsers\": 5\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get User Count - Monthly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/user?period=monthly&month=1&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "user"],
+              "query": [
+                { "key": "period", "value": "monthly" },
+                { "key": "month", "value": "1", "description": "Month number (1-12)" },
+                { "key": "year", "value": "2025", "description": "Year" }
+              ]
+            },
+            "description": "Get total users created in a specific month"
+          }
+        },
+        {
+          "name": "Get User Count - Yearly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/user?period=yearly&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "user"],
+              "query": [
+                { "key": "period", "value": "yearly" },
+                { "key": "year", "value": "2025" }
+              ]
+            },
+            "description": "Get total users created in a specific year"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sales Metrics",
+      "item": [
+        {
+          "name": "Get Sales Revenue - Daily",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/sales?period=daily&date=2025-01-21",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "sales"],
+              "query": [
+                { "key": "period", "value": "daily" },
+                { "key": "date", "value": "2025-01-21" }
+              ]
+            },
+            "description": "Get total revenue and order count for a specific day (COMPLETED orders only)"
+          },
+          "response": [
+            {
+              "name": "Example Response",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/dashboard/sales", "host": ["{{baseUrl}}"], "path": ["dashboard", "sales"] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"totalRevenue\": 5000000,\n    \"orderCount\": 10\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Sales Revenue - Monthly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/sales?period=monthly&month=1&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "sales"],
+              "query": [
+                { "key": "period", "value": "monthly" },
+                { "key": "month", "value": "1" },
+                { "key": "year", "value": "2025" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Sales Revenue - Yearly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/sales?period=yearly&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "sales"],
+              "query": [
+                { "key": "period", "value": "yearly" },
+                { "key": "year", "value": "2025" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Order Metrics",
+      "item": [
+        {
+          "name": "Get Orders by Status - Daily",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/orders?period=daily&date=2025-01-21",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "orders"],
+              "query": [
+                { "key": "period", "value": "daily" },
+                { "key": "date", "value": "2025-01-21" }
+              ]
+            },
+            "description": "Get order counts grouped by status for a specific day"
+          },
+          "response": [
+            {
+              "name": "Example Response",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/dashboard/orders", "host": ["{{baseUrl}}"], "path": ["dashboard", "orders"] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"PENDING\": 3,\n    \"PROCESSING\": 5,\n    \"COMPLETED\": 10,\n    \"CANCELLED\": 1\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Orders by Status - Monthly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/orders?period=monthly&month=1&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "orders"],
+              "query": [
+                { "key": "period", "value": "monthly" },
+                { "key": "month", "value": "1" },
+                { "key": "year", "value": "2025" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Orders by Status - Yearly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/orders?period=yearly&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "orders"],
+              "query": [
+                { "key": "period", "value": "yearly" },
+                { "key": "year", "value": "2025" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profit Metrics",
+      "item": [
+        {
+          "name": "Get Gross Profit - Daily",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/gross-profit?period=daily&date=2025-01-21",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "gross-profit"],
+              "query": [
+                { "key": "period", "value": "daily" },
+                { "key": "date", "value": "2025-01-21" }
+              ]
+            },
+            "description": "Get gross profit breakdown (cost, revenue, margin, profit %) for a specific day"
+          },
+          "response": [
+            {
+              "name": "Example Response",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/dashboard/gross-profit", "host": ["{{baseUrl}}"], "path": ["dashboard", "gross-profit"] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"totalCost\": 3000000,\n    \"totalRevenue\": 5000000,\n    \"totalMargin\": 2000000,\n    \"profitPercentage\": 40.0\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Gross Profit - Monthly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/gross-profit?period=monthly&month=1&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "gross-profit"],
+              "query": [
+                { "key": "period", "value": "monthly" },
+                { "key": "month", "value": "1" },
+                { "key": "year", "value": "2025" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Gross Profit - Yearly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/gross-profit?period=yearly&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "gross-profit"],
+              "query": [
+                { "key": "period", "value": "yearly" },
+                { "key": "year", "value": "2025" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Average Margin",
+      "item": [
+        {
+          "name": "Get Avg Margin Rate - Daily",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/total-avg-margin?period=daily&date=2025-01-21",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "total-avg-margin"],
+              "query": [
+                { "key": "period", "value": "daily" },
+                { "key": "date", "value": "2025-01-21" }
+              ]
+            },
+            "description": "Get weighted average margin rate for a specific day"
+          },
+          "response": [
+            {
+              "name": "Example Response",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/dashboard/total-avg-margin", "host": ["{{baseUrl}}"], "path": ["dashboard", "total-avg-margin"] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"avgMarginRate\": 35.5\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Avg Margin Rate - Monthly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/total-avg-margin?period=monthly&month=1&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "total-avg-margin"],
+              "query": [
+                { "key": "period", "value": "monthly" },
+                { "key": "month", "value": "1" },
+                { "key": "year", "value": "2025" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Avg Margin Rate - Yearly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/total-avg-margin?period=yearly&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "total-avg-margin"],
+              "query": [
+                { "key": "period", "value": "yearly" },
+                { "key": "year", "value": "2025" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shop Analytics",
+      "item": [
+        {
+          "name": "Get Shops by Revenue - Daily",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/shops?period=daily&date=2025-01-21",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "shops"],
+              "query": [
+                { "key": "period", "value": "daily" },
+                { "key": "date", "value": "2025-01-21" }
+              ]
+            },
+            "description": "Get shops ranked by revenue for a specific day"
+          },
+          "response": [
+            {
+              "name": "Example Response",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/dashboard/shops", "host": ["{{baseUrl}}"], "path": ["dashboard", "shops"] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": [\n    {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n      \"name\": \"Toko Makmur Jaya\",\n      \"createdAt\": \"2025-01-01T00:00:00.000Z\",\n      \"orderCount\": 5,\n      \"totalRevenue\": 2500000\n    },\n    {\n      \"id\": \"01234567-89ab-cdef-0123-456789abcde\",\n      \"name\": \"Warung Sejahtera\",\n      \"createdAt\": \"2025-01-01T00:00:00.000Z\",\n      \"orderCount\": 3,\n      \"totalRevenue\": 1500000\n    }\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Shops by Revenue - Monthly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/shops?period=monthly&month=1&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "shops"],
+              "query": [
+                { "key": "period", "value": "monthly" },
+                { "key": "month", "value": "1" },
+                { "key": "year", "value": "2025" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Shops by Revenue - Yearly",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/shops?period=yearly&year=2025",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "shops"],
+              "query": [
+                { "key": "period", "value": "yearly" },
+                { "key": "year", "value": "2025" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inventory Metrics",
+      "item": [
+        {
+          "name": "Get Product Stock Value",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/product-left-value",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "product-left-value"],
+              "query": []
+            },
+            "description": "Get current stock value for all products (not period-filtered)\n\nReturns total value and breakdown by product, sorted by value descending."
+          },
+          "response": [
+            {
+              "name": "Example Response",
+              "originalRequest": { "method": "GET", "header": [], "url": { "raw": "{{baseUrl}}/dashboard/product-left-value", "host": ["{{baseUrl}}"], "path": ["dashboard", "product-left-value"] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": null,\n  \"message\": \"ok\",\n  \"data\": {\n    \"totalStockValue\": 15000000,\n    \"products\": [\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcdef\",\n        \"name\": \"Beras Premium 5kg\",\n        \"stock\": 100,\n        \"price\": 75000,\n        \"value\": 7500000\n      },\n      {\n        \"id\": \"01234567-89ab-cdef-0123-456789abcde\",\n        \"name\": \"Gula Pasir 1kg\",\n        \"stock\": 500,\n        \"price\": 15000,\n        \"value\": 7500000\n      }\n    ]\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Cache Management",
+      "item": [
+        {
+          "name": "Revalidate All Dashboard Cache",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/revalidate",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "revalidate"],
+              "query": []
+            },
+            "description": "Revalidate all dashboard cache tags to force fresh data on next request.\n\nAdmin-only. Use this to refresh dashboard analytics after data changes."
+          },
+          "response": [
+            {
+              "name": "Example Response",
+              "originalRequest": { "method": "POST", "header": [], "url": { "raw": "{{baseUrl}}/dashboard/revalidate", "host": ["{{baseUrl}}"], "path": ["dashboard", "revalidate"] } },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "body": "{\n  \"error\": null,\n  \"message\": \"Dashboard cache revalidated successfully\",\n  \"data\": {\n    \"revalidated\": true\n  }\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
