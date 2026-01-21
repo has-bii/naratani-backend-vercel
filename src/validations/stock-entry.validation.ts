@@ -16,7 +16,10 @@ export const getStockEntryQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(10),
   productId: z.uuid().optional(),
   supplierId: z.uuid().optional(),
-  hasStock: z.coerce.boolean().optional(),
+  hasStock: z
+    .string()
+    .optional()
+    .transform((val) => (val ? val === "true" : undefined)),
 })
 
 export type CreateStockEntryInput = z.infer<typeof createStockEntrySchema>

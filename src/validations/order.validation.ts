@@ -13,7 +13,7 @@ export const createOrderSchema = z.object({
 
 export const updateOrderSchema = z
   .object({
-    status: z.enum(["PENDING", "COMPLETED", "CANCELLED"], {
+    status: z.enum(["PENDING", "COMPLETED", "CANCELLED", "PROCESSING"], {
       error: "Status tidak valid",
     }),
   })
@@ -33,7 +33,7 @@ export const getOrderQuerySchema = z.object({
     .optional()
     .default("createdAt"),
   sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
-  status: z.enum(["PENDING", "COMPLETED", "CANCELLED"]).optional(),
+  status: z.enum(["PENDING", "COMPLETED", "CANCELLED", "PROCESSING"]).optional(),
   shopId: z.uuid("ID toko tidak valid").optional(),
 })
 

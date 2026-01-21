@@ -6,14 +6,14 @@ import { z } from "zod"
 const acceptOrderSchema = z.object({
   items: z.array(
     z.object({
-      orderItemId: z.string().uuid(),
+      orderItemId: z.uuid(),
       allocations: z.array(
         z.object({
-          stockEntryId: z.string().uuid(),
+          stockEntryId: z.uuid(),
           quantity: z.number().int().positive(),
-        })
+        }),
       ),
-    })
+    }),
   ),
 })
 
@@ -47,7 +47,9 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     // Only allow accepting pending orders
     if (existingOrder.status !== "PENDING") {
-      return new BadRequestException("Hanya pesanan dengan status PENDING yang dapat diproses").toResponse()
+      return new BadRequestException(
+        "Hanya pesanan dengan status PENDING yang dapat diproses",
+      ).toResponse()
     }
 
     const body = await request.json()
@@ -55,16 +57,18 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     // Validate all allocations
     for (const item of items) {
-      const orderItem = existingOrder.orderItems.find(oi => oi.id === item.orderItemId)
+      const orderItem = existingOrder.orderItems.find((oi) => oi.id === item.orderItemId)
       if (!orderItem) {
-        return new BadRequestException(`Order item ${item.orderItemId} tidak ditemukan`).toResponse()
+        return new BadRequestException(
+          `Order item ${item.orderItemId} tidak ditemukan`,
+        ).toResponse()
       }
 
       // Check total allocated quantity matches order item quantity
       const totalAllocated = item.allocations.reduce((sum, a) => sum + a.quantity, 0)
       if (totalAllocated !== orderItem.quantity) {
         return new BadRequestException(
-          `Jumlah alokasi untuk ${orderItem.product.name} tidak sesuai`
+          `Jumlah alokasi untuk ${orderItem.product.name} tidak sesuai`,
         ).toResponse()
       }
 
@@ -75,18 +79,20 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         })
 
         if (!stockEntry) {
-          return new BadRequestException(`Stock entry ${allocation.stockEntryId} tidak ditemukan`).toResponse()
+          return new BadRequestException(
+            `Stock entry ${allocation.stockEntryId} tidak ditemukan`,
+          ).toResponse()
         }
 
         if (stockEntry.productId !== orderItem.productId) {
           return new BadRequestException(
-            `Stock entry tidak sesuai dengan produk ${orderItem.product.name}`
+            `Stock entry tidak sesuai dengan produk ${orderItem.product.name}`,
           ).toResponse()
         }
 
         if (stockEntry.remainingQty < allocation.quantity) {
           return new BadRequestException(
-            `Stok tidak mencukupi untuk stock entry ${stockEntry.id}`
+            `Stok tidak mencukupi untuk stock entry ${stockEntry.id}`,
           ).toResponse()
         }
       }
@@ -113,7 +119,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
       // Process each order item
       for (const item of items) {
-        const orderItem = existingOrder.orderItems.find(oi => oi.id === item.orderItemId)!
+        const orderItem = existingOrder.orderItems.find((oi) => oi.id === item.orderItemId)!
         const unitPrice = orderItem.price
 
         let totalCost = 0
