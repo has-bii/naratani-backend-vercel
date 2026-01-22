@@ -1,3 +1,4 @@
+import { sendOTPEmail } from "@/lib/email"
 import { ac, admin as adminRole, sales, user } from "@/lib/permissions"
 import prisma from "@/lib/prisma"
 import { hashPassword, verifyPassword } from "@/utils/password"
@@ -6,7 +7,7 @@ import { expo } from "@better-auth/expo"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { APIError, createAuthMiddleware } from "better-auth/api"
 import { betterAuth } from "better-auth/minimal"
-import { admin, openAPI, phoneNumber } from "better-auth/plugins"
+import { admin, emailOTP, openAPI, phoneNumber } from "better-auth/plugins"
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -19,9 +20,6 @@ export const auth = betterAuth({
       verify: verifyPassword,
     },
     requireEmailVerification: false,
-    sendResetPassword: async (data, request) => {
-      console.log(`Requesting reset password for ${data.user.email}: ${data.token}`)
-    },
   },
   plugins: [
     openAPI(),
@@ -44,6 +42,15 @@ export const auth = betterAuth({
 
         return success
       },
+    }),
+    emailOTP({
+      overrideDefaultEmailVerification: true,
+      sendVerificationOTP: async ({ email, otp, type }) => {
+        await sendOTPEmail({ email, otp, type })
+      },
+      otpLength: 6,
+      expiresIn: 300, // 5 minutes
+      disableSignUp: true,
     }),
   ],
   session: {
