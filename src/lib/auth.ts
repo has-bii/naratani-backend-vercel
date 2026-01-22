@@ -66,6 +66,10 @@ export const auth = betterAuth({
     database: {
       generateId: false,
     },
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: new URL(process.env.ADMIN_APP_ORIGIN!).hostname,
+    },
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
