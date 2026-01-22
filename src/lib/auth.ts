@@ -68,7 +68,7 @@ export const auth = betterAuth({
     },
     crossSubDomainCookies: {
       enabled: true,
-      domain: new URL(process.env.ADMIN_APP_ORIGIN!).hostname,
+      domain: new URL(process.env.ADMIN_APP_ORIGIN!).hostname.replace("admin", ""),
     },
   },
   hooks: {
