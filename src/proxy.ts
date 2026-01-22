@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",") ?? []
+const allowedOrigins = [
+  process.env.ADMIN_APP_ORIGIN,
+  process.env.USER_APP_ORIGIN,
+  process.env.SALES_APP_ORIGIN,
+]
 
 const corsOptions = {
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",

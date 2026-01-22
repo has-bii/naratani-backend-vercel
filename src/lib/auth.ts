@@ -4,6 +4,7 @@ import { hashPassword, verifyPassword } from "@/utils/password"
 import { phoneSchema } from "@/validations/auth.validation"
 import { expo } from "@better-auth/expo"
 import { prismaAdapter } from "better-auth/adapters/prisma"
+import { APIError, createAuthMiddleware } from "better-auth/api"
 import { betterAuth } from "better-auth/minimal"
 import { admin, openAPI, phoneNumber } from "better-auth/plugins"
 
@@ -59,5 +60,32 @@ export const auth = betterAuth({
       generateId: false,
     },
   },
-  trustedOrigins: process.env.TRUSTED_ORIGINS?.split(","),
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      const origin = ctx.headers?.get("origin") || ""
+
+      // Block non-admin users from signing in to admin app
+      if (ctx.path === "/sign-in/email") {
+        const email = ctx.body?.email
+
+        if (email && origin === process.env.ADMIN_APP_ORIGIN) {
+          const userRecord = await prisma.user.findUnique({
+            where: { email },
+            select: { role: true },
+          })
+
+          if (userRecord && userRecord.role !== "admin") {
+            throw new APIError("FORBIDDEN", {
+              message: "You don't have permission to access the admin app",
+            })
+          }
+        }
+      }
+    }),
+  },
+  trustedOrigins: [
+    process.env.ADMIN_APP_ORIGIN,
+    process.env.USER_APP_ORIGIN,
+    process.env.SALES_APP_ORIGIN,
+  ].filter(Boolean) as string[],
 })
