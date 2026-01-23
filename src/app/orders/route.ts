@@ -20,7 +20,9 @@ export async function GET(request: Request) {
     const where = {
       ...(status && { status }),
       ...(shopId && { shopId }),
-      ...(session.user.role !== "sales" && { createdBy: session.user.id }),
+      ...((session.user.role === "sales" || session.user.role === "user") && {
+        createdBy: session.user.id,
+      }),
     }
 
     const [orders, total] = await Promise.all([
