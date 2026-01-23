@@ -89,6 +89,9 @@ src/
 │       ├── total-avg-margin/route.ts  # Weighted average margin rate (GET)
 │       ├── shops/route.ts             # Shops ranked by revenue (GET)
 │       └── product-left-value/route.ts # Current stock value (GET)
+│   └── sales-performance/
+│       ├── me/route.ts                # Current sales person metrics (GET)
+│       └── leaderboard/route.ts       # Sales leaderboard (GET)
 │   └── generated/prisma/              # Auto-generated Prisma client
 │
 ├── lib/
@@ -110,7 +113,8 @@ src/
     ├── order.validation.ts            # Order-related Zod schemas
     ├── supplier.validation.ts         # Supplier-related Zod schemas
     ├── stock-entry.validation.ts      # Stock Entry-related Zod schemas
-    └── dashboard.validation.ts        # Dashboard period filter schemas
+    ├── dashboard.validation.ts        # Dashboard period filter schemas
+    └── sales-performance.validation.ts # Sales performance filter schemas
 
 prisma/
 ├── schema.prisma                      # Database schema definition
@@ -307,11 +311,11 @@ All exceptions have a `.toResponse()` method that returns a `NextResponse`.
 
 Defined in `src/lib/permissions.ts`:
 
-| Role | Product | Category | Shop | Order | Supplier | StockEntry | Dashboard |
-|------|---------|----------|-------|-------|----------|------------|-----------|
-| Admin | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, delete | read, revalidate |
-| User | read | read | read | - | - | - | - |
-| Sales | read | read | read | create, read, update, delete | read | read | - |
+| Role | Product | Category | Shop | Order | Supplier | StockEntry | Dashboard | Sales Performance |
+|------|---------|----------|-------|-------|----------|------------|-----------|-------------------|
+| Admin | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, delete | read, revalidate | read |
+| User | read | read | read | - | - | - | - | - |
+| Sales | read | read | read | create, read | read | read | - | read |
 
 Use `requirePermission({ resource: ["action"] })` in route handlers to enforce permissions.
 
@@ -374,6 +378,23 @@ Use `requirePermission({ resource: ["action"] })` in route handlers to enforce p
 - `POST /dashboard/revalidate` - Revalidate all dashboard cache
   - Response: `{ revalidated: true }`
   - Admin-only, clears all dashboard cache tags for fresh data
+
+### Sales Performance Endpoints
+
+**For sales mobile app** - allows sales people to track their own performance and compare with others.
+
+**Filter Parameters:**
+- No params - All-time performance (from user's `createdAt` to now)
+- `?month=1&year=2026` - Specific month performance
+
+**Available Endpoints:**
+- `GET /sales-performance/me` - Current sales person's performance metrics
+  - Response: User info, summary (revenue, orders, completion rate), status breakdown, margin metrics
+  - Accessible by: Sales (own data), Admin
+
+- `GET /sales-performance/leaderboard` - Sales leaderboard ranked by revenue
+  - Response: Array of ranked sales people with revenue, order count, completion rate + current user's position
+  - Accessible by: Sales, Admin
 
 ## Adding New Features
 
