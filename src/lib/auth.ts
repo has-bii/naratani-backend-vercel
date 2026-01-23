@@ -75,10 +75,10 @@ export const auth = betterAuth({
     before: createAuthMiddleware(async (ctx) => {
       const origin = ctx.headers?.get("origin") || ""
 
-      // Block non-admin users from signing in to admin app
       if (ctx.path === "/sign-in/email") {
         const email = ctx.body?.email
 
+        // Block non-admin users from signing in to admin app
         if (email && origin === process.env.ADMIN_APP_ORIGIN) {
           const userRecord = await prisma.user.findUnique({
             where: { email },
@@ -88,6 +88,20 @@ export const auth = betterAuth({
           if (userRecord && userRecord.role !== "admin") {
             throw new APIError("FORBIDDEN", {
               message: "You don't have permission to access the admin app",
+            })
+          }
+        }
+
+        // Block non-admin/non-sales users from signing in to sales app
+        if (email && origin === process.env.SALES_APP_ORIGIN) {
+          const userRecord = await prisma.user.findUnique({
+            where: { email },
+            select: { role: true },
+          })
+
+          if (userRecord && userRecord.role === "user") {
+            throw new APIError("FORBIDDEN", {
+              message: "Anda tidak memiliki akses untuk masuk",
             })
           }
         }
