@@ -315,7 +315,7 @@ Defined in `src/lib/permissions.ts`:
 |------|---------|----------|-------|-------|----------|------------|-----------|-------------------|
 | Admin | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, update, delete | create, read, delete | read, revalidate | read |
 | User | read | read | read | - | - | - | - | - |
-| Sales | read | read | read | create, read | read | read | - | read |
+| Sales | read | read | read | create, read, delete | read | read | - | read |
 
 Use `requirePermission({ resource: ["action"] })` in route handlers to enforce permissions.
 
@@ -327,6 +327,15 @@ Use `requirePermission({ resource: ["action"] })` in route handlers to enforce p
 
 **Order Details:**
 - `GET /orders/:id` - Get order by ID with items and margin data
+  - Response includes `canDelete` boolean property:
+    - `true` if order can be deleted (PENDING/CANCELLED and user has permission)
+    - `false` otherwise
+- `DELETE /orders/:id` - Delete PENDING or CANCELLED order
+  - For PENDING: Restores Product.stock and releases Product.reservedStock
+  - For CANCELLED: Stock already restored, only deletes the order record
+  - Only available for PENDING or CANCELLED orders
+  - **Sales**: Can only delete orders they created
+  - **Admin**: Can delete any order
 
 **Order Status Changes:**
 - `PUT /orders/:id/accept` - Accept PENDING order → PROCESSING

@@ -35,6 +35,6 @@ export const sales = ac.newRole({
   product: ["read"],
   category: ["read"],
   shop: ["read"],
-  order: ["create", "read"],
+  order: ["create", "read", "delete"],
   "sales-performance": ["read"],
 })
